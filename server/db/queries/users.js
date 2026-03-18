@@ -21,20 +21,17 @@ export async function registerUser({ username, email, password_hash }) {
 export async function getUserByUsername({ username }) {
   const {
     rows: [user],
-  } = await db.query(
-    `SELECT * FROM users WHERE username = $1`,
-    [username]
-  );
+  } = await db.query(`SELECT * FROM users WHERE username = $1`, [username]);
   return user;
 }
 
-export async function getUserByUsernameAndPassword({ username, password_hash }) {
+export async function getUserByUsernameAndPassword({
+  username,
+  password_hash,
+}) {
   const {
     rows: [user],
-  } = await db.query(
-    `SELECT * FROM users WHERE username = $1`,
-    [username]
-  );
+  } = await db.query(`SELECT * FROM users WHERE username = $1`, [username]);
 
   if (!user) return null;
 
@@ -47,9 +44,6 @@ export async function getUserByUsernameAndPassword({ username, password_hash }) 
 export async function getUserById({ id }) {
   const {
     rows: [user],
-  } = await db.query(
-    `SELECT * FROM users WHERE id = $1`,
-    [id]
-  );
+  } = await db.query(`SELECT * FROM users WHERE id = $1`, [id]);
   return user;
 }

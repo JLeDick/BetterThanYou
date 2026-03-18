@@ -15,6 +15,7 @@ router.get("/", async (req, res) => {
   res.send(users);
 });
 
+// User registration
 router.post(
   "/register",
   requireBody(["username", "email", "password_hash"]),
@@ -24,6 +25,7 @@ router.post(
   }
 );
 
+// User login
 router.post(
   "/login",
   requireBody(["username", "password_hash"]),
