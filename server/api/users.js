@@ -15,19 +15,14 @@ router.get("/", async (req, res) => {
   res.send(users);
 });
 
-router.post("/register", async (req, res) => {
-  if (
-    !req.body ||
-    !req.body.username ||
-    !req.body.email ||
-    !req.body.password_hash
-  ) {
-    return res.status(400).send({ error: "Missing required field" });
+router.post(
+  "/register",
+  requireBody(["username", "email", "password_hash"]),
+  async (req, res) => {
+    const user = await registerUser(req.body);
+    res.status(201).send(user);
   }
-
-  const user = await registerUser(req.body);
-  res.status(201).send(user);
-});
+);
 
 router.post(
   "/login",
