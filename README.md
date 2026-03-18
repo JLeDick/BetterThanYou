@@ -202,3 +202,7 @@ Recommended registrars: Porkbun, Cloudflare Registrar
 // can compare between users
 
 // As a [blank] I want to [blank] so [blank]
+
+Remove the try catches from my queries because the catch will swallow the error
+and I want to actually throw it because postgres throws very useful errors
+It will do stuff like type validation and foreign key validation
