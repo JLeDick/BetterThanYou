@@ -1,9 +1,25 @@
-import './App.css'
+import { Routes, Route } from "react-router-dom";
+
+import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
+import Home from "./pages/Home/Home";
+import ColorGame from "./pages/Games/ColorGame/ColorGame";
+import TypingSpeed from "./pages/Games/TypingSpeed/TypingSpeed";
+
+import "./App.css";
 
 function App() {
   return (
-    <h1>BetterThanYou</h1>
-  )
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/games/color-game" element={<ColorGame />} />
+        <Route path="/games/typing-speed" element={<TypingSpeed />} />
+      </Route>
+    </Routes>
+  );
 }
 
-export default App
+export default App;
