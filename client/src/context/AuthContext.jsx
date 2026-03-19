@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { AuthContext } from "./AuthContext.js";
 
+export const HOST = "http://localhost:3000/";
+
 export default function AuthProvider({ children }) {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [user, setUser] = useState(null);
 
   const register = async ({ username, email, password }) => {
-    const response = await fetch("http://localhost:3000/api/users/register", {
+    const response = await fetch(`${HOST}api/users/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, email, password_hash: password }),
@@ -23,7 +25,7 @@ export default function AuthProvider({ children }) {
   };
 
   const login = async ({ username, password }) => {
-    const response = await fetch("http://localhost:3000/api/users/login", {
+    const response = await fetch(`${HOST}api/users/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password_hash: password }),
@@ -47,7 +49,15 @@ export default function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ token, setToken, user, setUser, register, login, logout }}
+      value={{
+        token,
+        setToken,
+        user,
+        setUser,
+        register,
+        login,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>
