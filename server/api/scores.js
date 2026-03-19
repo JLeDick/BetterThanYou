@@ -6,7 +6,9 @@ import {
   getTopScoreByGameAndUser,
   getScoresByGameAndUser,
   getMaxScoresByGame,
+  getAllTopScoresOfUser,
 } from "#db/queries/scores";
+import { getUserByUsername } from "#db/queries/users";
 import requireUser from "#middleware/requireUser";
 import requireBody from "#middleware/requireBody";
 
@@ -45,6 +47,20 @@ router.get("/game/:game_id/user", requireUser, async (req, res) => {
     game_id: req.params.game_id,
   });
   res.send(scores);
+});
+
+// Compare two users top scores across all games
+router.get("/compare/:username1/:username2", async (req, res) => {
+  const user1 = await getUserByUsername({ username: req.params.username1 });
+  const user2 = await getUserByUsername({ username: req.params.username2 });
+
+  if (!user1 || !user2) {
+    return res.status(404).send("User not found");
+  }
+
+  const user1Scores = await getAllTopScoresOfUser({ user_id: user1.id });
+  const user2Scores = await getAllTopScoresOfUser({ user_id: user2.id });
+  res.send({ user1: user1Scores, user2: user2Scores });
 });
 
 export default router;

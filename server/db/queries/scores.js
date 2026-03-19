@@ -77,3 +77,17 @@ export async function getMaxScoresByGame({ game_id }) {
   );
   return rows;
 }
+
+export async function getAllTopScoresOfUser({ user_id }) {
+  const { rows } = await db.query(
+    `
+    SELECT games.id AS game_id, games.name, MAX(scores.score) AS top_score
+    FROM scores
+    JOIN games ON scores.game_id = games.id
+    WHERE scores.user_id = $1
+    GROUP BY games.id, games.name
+    `,
+    [user_id]
+  );
+  return rows;
+}
