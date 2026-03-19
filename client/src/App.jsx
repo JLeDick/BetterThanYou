@@ -6,6 +6,10 @@ import Register from "./pages/Register/Register";
 import Home from "./pages/Home/Home";
 import ColorGame from "./pages/Games/ColorGame/ColorGame";
 import TypingSpeed from "./pages/Games/TypingSpeed/TypingSpeed";
+import Compare from "./pages/Compare/Compare";
+import Stats from "./pages/Stats/Stats";
+import Leaderboard from "./pages/Leaderboard/Leaderboard";
+import Group from "./pages/Group/Group";
 
 import "./App.css";
 
@@ -18,6 +22,10 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/games/color-game" element={<ColorGame />} />
         <Route path="/games/typing-speed" element={<TypingSpeed />} />
+        <Route path="/compare" element={<Compare />} />
+        <Route path="/stats" element={<Stats />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/groups" element={<Group />} />
       </Route>
     </Routes>
   );

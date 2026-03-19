@@ -21,7 +21,8 @@ router.post(
   requireBody(["username", "email", "password_hash"]),
   async (req, res) => {
     const user = await registerUser(req.body);
-    res.status(201).send(user);
+    const token = await createToken({ id: user.id });
+    res.status(201).send(token);
   }
 );
 

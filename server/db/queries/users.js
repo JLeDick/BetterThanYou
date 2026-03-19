@@ -7,13 +7,14 @@ export async function getUsers() {
 }
 
 export async function registerUser({ username, email, password_hash }) {
+  const hashedPassword = await bcrypt.hash(password_hash, 10);
   const {
     rows: [registeredUser],
   } = await db.query(
     `INSERT INTO users (username, email, password_hash)
      VALUES ($1, $2, $3)
      RETURNING *`,
-    [username, email, password_hash]
+    [username, email, hashedPassword]
   );
   return registeredUser;
 }
