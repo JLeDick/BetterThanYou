@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { HOST } from "../../context/AuthContext";
+import { HOST } from "../../context/AuthContext.js";
 
 export default function Compare() {
   const [error, setError] = useState(null);

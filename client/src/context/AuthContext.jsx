@@ -1,7 +1,5 @@
 import { useState } from "react";
-import { AuthContext } from "./AuthContext.js";
-
-export const HOST = "http://localhost:3000/";
+import { AuthContext, HOST } from "./AuthContext.js";
 
 export default function AuthProvider({ children }) {
   const [token, setToken] = useState(localStorage.getItem("token"));
