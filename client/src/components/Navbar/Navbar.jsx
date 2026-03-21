@@ -13,7 +13,7 @@ export default function Navbar() {
         <div className="menu-dropdown">
           {token ? (
             <>
-              <Link to="/home">Home</Link>
+              <Link to="/">Home</Link>
               <Link to="/stats">Stats</Link>
               <Link to="/leaderboard">Leaderboard</Link>
               <Link to="/compare">Compare</Link>
@@ -22,7 +22,7 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Link to="/home">Home</Link>
+              <Link to="/">Home</Link>
               <Link to="/login">Login</Link>
               <Link to="/register">Register</Link>
             </>

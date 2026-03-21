@@ -4,7 +4,7 @@ import Layout from "./components/Layout/Layout";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Home from "./pages/Home/Home";
-import ColorGame from "./pages/Games/ColorGame/ColorGame";
+import ColorGame from "./pages/Games/ColorGame/Game/colorGame";
 import TypingSpeed from "./pages/Games/TypingSpeed/TypingSpeed";
 import Compare from "./pages/Compare/Compare";
 import Stats from "./pages/Stats/Stats";
@@ -19,7 +19,7 @@ function App() {
       <Route element={<Layout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/games/color-game" element={<ColorGame />} />
         <Route path="/games/typing-speed" element={<TypingSpeed />} />
         <Route path="/compare" element={<Compare />} />
