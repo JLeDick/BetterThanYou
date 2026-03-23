@@ -5,7 +5,7 @@ import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Home from "./pages/Home/Home";
 import ColorGame from "./pages/Games/ColorGame/Game/colorGame";
-import TypingSpeed from "./pages/Games/TypingSpeed/TypingSpeed";
+import TypingSpeed from "./pages/Games/TypingSpeed/Game/TypingSpeed";
 import Compare from "./pages/Compare/Compare";
 import Stats from "./pages/Stats/Stats";
 import Leaderboard from "./pages/Leaderboard/Leaderboard";

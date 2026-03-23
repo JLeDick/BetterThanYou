@@ -220,3 +220,66 @@ p[role="alert"] {
 .color-block:hover {
   opacity: 0.9;
 }
+
+/* --- TYPING SPEED --- */
+.typing-game {
+  text-align: center;
+}
+
+.typing-timer {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.typing-words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  max-height: 150px;
+  overflow: hidden;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  line-height: 2;
+}
+
+.typing-word {
+  font-size: 1.1rem;
+  padding: 0.1rem 0.25rem;
+  border-radius: 4px;
+}
+
+.typing-word.current {
+  background: #222;
+  color: white;
+}
+
+.typing-word.correct {
+  color: green;
+}
+
+.typing-word.incorrect {
+  color: red;
+  text-decoration: line-through;
+}
+
+.typing-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.75rem;
+  font-size: 1.25rem;
+  border: 2px solid #222;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.typing-stats {
+  font-size: 1.25rem;
+  margin: 1rem 0;
+}
+
+.typing-stats p {
+  margin: 0.5rem 0;
+}
