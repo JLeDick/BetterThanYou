@@ -5,17 +5,18 @@ export default function Home() {
     <>
       <header>
         <h1>BetterThanYou</h1>
+        <p className="tagline">Prove you're the best.</p>
       </header>
 
       <div className="game-selection-block">
         <Link to="/games/color-game" className="game-tile">
           <h2>Color Game</h2>
-          <img src="/color-game-preview.png" alt="Color Game" />
+          <p>Find the odd color out</p>
         </Link>
 
         <Link to="/games/typing-speed" className="game-tile">
-          <h2>Typing Speed</h2>
-          <img src="/typing-speed-preview.png" alt="Typing Speed" />
+          <h2>Typing Test</h2>
+          <p>Test your speed and accuracy</p>
         </Link>
       </div>
     </>
