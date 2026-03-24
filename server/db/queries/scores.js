@@ -91,3 +91,48 @@ export async function getAllTopScoresOfUser({ user_id }) {
   );
   return rows;
 }
+
+export async function getDailyTopScores({ user_id }) {
+  const { rows } = await db.query(
+    `
+    SELECT games.id AS game_id, games.name, MAX(scores.score) AS top_score
+    FROM scores
+    JOIN games ON scores.game_id = games.id
+    WHERE scores.user_id = $1
+    AND scores.created_at > NOW() - INTERVAL '1 day'
+    GROUP BY games.id, games.name
+    `,
+    [user_id]
+  );
+  return rows;
+}
+
+export async function getWeeklyTopScores({ user_id }) {
+  const { rows } = await db.query(
+    `
+    SELECT games.id AS game_id, games.name, MAX(scores.score) AS top_score
+    FROM scores
+    JOIN games ON scores.game_id = games.id
+    WHERE scores.user_id = $1
+    AND scores.created_at > NOW() - INTERVAL '7 days'
+    GROUP BY games.id, games.name
+    `,
+    [user_id]
+  );
+  return rows;
+}
+
+export async function getMonthlyTopScores({ user_id }) {
+  const { rows } = await db.query(
+    `
+    SELECT games.id AS game_id, games.name, MAX(scores.score) AS top_score
+    FROM scores
+    JOIN games ON scores.game_id = games.id
+    WHERE scores.user_id = $1
+    AND scores.created_at > NOW() - INTERVAL '30 days'
+    GROUP BY games.id, games.name
+    `,
+    [user_id]
+  );
+  return rows;
+}

@@ -6,6 +6,7 @@ import {
   registerUser,
 } from "#db/queries/users";
 import requireBody from "#middleware/requireBody";
+import requireUser from "#middleware/requireUser";
 import { createToken } from "#utils/jwt";
 
 const router = express.Router();
@@ -13,6 +14,10 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   const users = await getUsers();
   res.send(users);
+});
+
+router.get("/me", requireUser, (req, res) => {
+  res.send(req.user);
 });
 
 // User registration

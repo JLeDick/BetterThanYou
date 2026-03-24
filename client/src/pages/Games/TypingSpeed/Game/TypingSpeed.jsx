@@ -3,6 +3,7 @@ import { AuthContext, HOST } from "../../../../context/AuthContext";
 import calcWPM from "../Logic/wordsPerMinute";
 import accuracyCalc from "../Logic/accuracyCalc";
 import getRandomWords from "../Logic/wordSelection";
+import calcScore from "../Logic/calcScore";
 
 export default function TypingSpeed() {
   const { token } = useContext(AuthContext);
@@ -53,8 +54,8 @@ export default function TypingSpeed() {
   // Submit score when game ends
   useEffect(() => {
     if (!game.over || !token) return;
-    const wpm = calcWPM(game.results);
-    if (wpm <= 0) return;
+    const score = calcScore(game.results);
+    if (score <= 0) return;
 
     fetch(`${HOST}api/scores`, {
       method: "POST",
@@ -62,7 +63,7 @@ export default function TypingSpeed() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ game_id: 2, score: wpm }),
+      body: JSON.stringify({ game_id: 2, score: score }),
     }).catch((e) => setError(e.message));
   }, [game.over]);
 
@@ -151,6 +152,9 @@ export default function TypingSpeed() {
             </p>
             <p>
               <strong>{accuracyCalc(game.results)}%</strong> Accuracy
+            </p>
+            <p>
+              <strong>Score: {calcScore(game.results)}</strong>
             </p>
             <p>
               {game.results.filter((r) => r.correct).length} /{" "}

@@ -7,6 +7,9 @@ import {
   getScoresByGameAndUser,
   getMaxScoresByGame,
   getAllTopScoresOfUser,
+  getDailyTopScores,
+  getWeeklyTopScores,
+  getMonthlyTopScores,
 } from "#db/queries/scores";
 import { getUserByUsername } from "#db/queries/users";
 import requireUser from "#middleware/requireUser";
@@ -61,6 +64,18 @@ router.get("/compare/:username1/:username2", async (req, res) => {
   const user1Scores = await getAllTopScoresOfUser({ user_id: user1.id });
   const user2Scores = await getAllTopScoresOfUser({ user_id: user2.id });
   res.send({ user1: user1Scores, user2: user2Scores });
+});
+
+// All stats for a user (daily, weekly, monthly, all-time)
+router.get("/stats/:user_id", async (req, res) => {
+  const user_id = req.params.user_id;
+  const [allTime, daily, weekly, monthly] = await Promise.all([
+    getAllTopScoresOfUser({ user_id }),
+    getDailyTopScores({ user_id }),
+    getWeeklyTopScores({ user_id }),
+    getMonthlyTopScores({ user_id }),
+  ]);
+  res.send({ allTime, daily, weekly, monthly });
 });
 
 export default router;

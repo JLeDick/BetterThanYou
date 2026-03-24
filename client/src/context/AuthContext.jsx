@@ -20,6 +20,14 @@ export default function AuthProvider({ children }) {
     const newToken = await response.text();
     localStorage.setItem("token", newToken);
     setToken(newToken);
+
+    // gets username for stats => const { user } = useContext(AuthContext)
+    // use user.id and user.username
+    const meResponse = await fetch(`${HOST}api/users/me`, {
+      headers: { Authorization: `Bearer ${newToken}` },
+    });
+    const userData = await meResponse.json();
+    setUser(userData);
   };
 
   const login = async ({ username, password }) => {
@@ -37,6 +45,13 @@ export default function AuthProvider({ children }) {
     const newToken = await response.text();
     localStorage.setItem("token", newToken);
     setToken(newToken);
+
+    // same as above
+    const meResponse = await fetch(`${HOST}api/users/me`, {
+      headers: { Authorization: `Bearer ${newToken}` },
+    });
+    const userData = await meResponse.json();
+    setUser(userData);
   };
 
   const logout = () => {

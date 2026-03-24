@@ -283,3 +283,39 @@ p[role="alert"] {
 .typing-stats p {
   margin: 0.5rem 0;
 }
+
+/* --- STATS PAGE --- */
+.stats-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.stats-section h3 {
+  margin-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+  padding-bottom: 0.25rem;
+}
+
+.stats-games {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.stats-game-card {
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  text-align: center;
+  min-width: 150px;
+}
+
+.stats-game-name {
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.stats-game-score {
+  font-size: 1.5rem;
+}
