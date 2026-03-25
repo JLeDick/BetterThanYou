@@ -23,8 +23,8 @@ export default function CoinGame() {
   const [error, setError] = useState(null);
   const [finalScore, setFinalScore] = useState(null);
 
-  // Update both the ref and React state so the game loop always
-  // reads the latest phase and React re-renders for UI changes
+  // UPDATE BOTH THE REF AND REACT STATE SO THE GAME LOOP ALWAYS
+  // READS THE LATEST PHASE AND REACT RE-RENDERS FOR UI CHANGES
   const setGamePhase = useCallback((p) => {
     phaseRef.current = p;
     setPhase(p);
@@ -50,7 +50,7 @@ export default function CoinGame() {
     setGamePhase("picking");
   };
 
-  // game loop + shot resolution
+  // GAME LOOP + SHOT RESOLUTION
   const isActive = phase !== "idle" && phase !== "gameOver";
 
   useEffect(() => {
@@ -60,21 +60,21 @@ export default function CoinGame() {
     const ctx = canvas.getContext("2d");
     let running = true;
 
-    // Resolve the shot once all coins stop
+    // RESOLVE THE SHOT ONCE ALL COINS STOP
     const resolveShot = () => {
       const g = gameRef.current;
       const fallen = g.fallenThisShot;
 
-      // All coins disturbed this turn, minus the shooter = "hit coins"
+      // ALL COINS DISTURBED THIS TURN, MINUS THE SHOOTER = "HIT COINS"
       const hitCoins = new Set(g.touchedCoins);
       hitCoins.delete(g.shooterId);
 
-      let livesLost = fallen.length; // each fallen coin costs 1 life
+      let livesLost = fallen.length; // EACH FALLEN COIN COSTS 1 LIFE
       let success = false;
       let nextShooterId = null;
 
       if (hitCoins.size === 1 && fallen.length === 0) {
-        // Clean hit — exactly 1 other coin disturbed, nothing fell
+        // CLEAN HIT — EXACTLY 1 OTHER COIN DISTURBED, NOTHING FELL
         success = true;
         nextShooterId = [...hitCoins][0];
         const shooter = g.coins.find((c) => c.id === g.shooterId);
@@ -90,14 +90,14 @@ export default function CoinGame() {
           time: Date.now(),
         };
       } else if (hitCoins.size === 0 && fallen.length === 0) {
-        livesLost += 1; // pure whiff
+        livesLost += 1; // PURE WHIFF
         g.notification = {
           text: "Miss! -1 Life",
           color: "#e04040",
           time: Date.now(),
         };
       } else if (hitCoins.size >= 2) {
-        livesLost += 1; // multi-hit: more than 1 coin disturbed
+        livesLost += 1; // MULTI-HIT: MORE THAN 1 COIN DISTURBED
         g.notification = {
           text: "Multi-hit! -1 Life",
           color: "#e04040",
@@ -121,9 +121,9 @@ export default function CoinGame() {
 
       const remaining = g.coins.filter((c) => c.active);
 
-      // Round clear check
+      // ROUND CLEAR CHECK
       if (success && remaining.length <= 1) {
-        g.score += g.roundScore; // double points for the round
+        g.score += g.roundScore; // DOUBLE POINTS FOR THE ROUND
         g.round += 1;
         g.notification = {
           text: `Round Clear! 2x bonus! Score: ${g.score}`,
@@ -139,14 +139,14 @@ export default function CoinGame() {
         return;
       }
 
-      // Not enough coins to continue
+      // NOT ENOUGH COINS TO CONTINUE
       if (remaining.length < 2) {
         setFinalScore({ score: g.score, round: g.round });
         setGamePhase("gameOver");
         return;
       }
 
-      // Set up next turn
+      // SET UP NEXT TURN
       if (success && nextShooterId !== null) {
         const next = g.coins.find((c) => c.id === nextShooterId && c.active);
         if (next) {
@@ -174,11 +174,11 @@ export default function CoinGame() {
       const g = gameRef.current;
       if (!g) return;
 
-      // Run physics when simulating
+      // RUN PHYSICS WHEN SIMULATING
       if (phaseRef.current === "simulating") {
         const { collisions, fallen } = step(g.coins, g.cups);
 
-        // Track ALL coins involved in any collision
+        // TRACK ALL COINS INVOLVED IN ANY COLLISION
         for (const [a, b] of collisions) {
           g.touchedCoins.add(a);
           g.touchedCoins.add(b);
@@ -190,13 +190,13 @@ export default function CoinGame() {
         }
       }
 
-      // Determine phase message
+      // DETERMINE PHASE MESSAGE
       let message = null;
       if (phaseRef.current === "picking") message = "Click a coin to select";
       else if (phaseRef.current === "aiming" && !g.isDragging)
         message = "Drag from your coin to aim";
 
-      // Render
+      // RENDER
       render(ctx, {
         coins: g.coins,
         cups: g.cups,
@@ -218,7 +218,7 @@ export default function CoinGame() {
     };
   }, [isActive, setGamePhase]);
 
-  // input handling
+  // INPUT HANDLING
   useEffect(() => {
     if (!isActive) return;
 
@@ -281,7 +281,7 @@ export default function CoinGame() {
       const shooter = g.coins.find((c) => c.id === g.shooterId);
       if (!shooter) return;
 
-      // Arrow points opposite to drag direction
+      // ARROW POINTS OPPOSITE TO DRAG DIRECTION
       const dx = g.dragStart.x - pos.x;
       const dy = g.dragStart.y - pos.y;
       const dragDist = Math.sqrt(dx * dx + dy * dy);
@@ -308,7 +308,7 @@ export default function CoinGame() {
       const arrowData = g.arrow;
       g.arrow = null;
 
-      if (!arrowData || arrowData.power < 0.06) return; // too weak
+      if (!arrowData || arrowData.power < 0.06) return; // TOO WEAK
 
       const shooter = g.coins.find((c) => c.id === g.shooterId);
       if (!shooter) return;
@@ -324,8 +324,8 @@ export default function CoinGame() {
       setPhase("simulating");
     };
 
-    // Canvas gets mousedown/touchstart; window gets move/up
-    // so dragging works even if cursor leaves the canvas
+    // CANVAS GETS MOUSEDOWN/TOUCHSTART; WINDOW GETS MOVE/UP
+    // SO DRAGGING WORKS EVEN IF CURSOR LEAVES THE CANVAS
     canvas.addEventListener("mousedown", handleDown);
     canvas.addEventListener("touchstart", handleDown, { passive: false });
     window.addEventListener("mousemove", handleMove);
@@ -343,7 +343,7 @@ export default function CoinGame() {
     };
   }, [isActive]);
 
-  // submits score after game
+  // SUBMITS SCORE AFTER GAME
   useEffect(() => {
     if (phase !== "gameOver" || !token || !gameRef.current) return;
     const score = gameRef.current.score;
@@ -359,7 +359,7 @@ export default function CoinGame() {
     }).catch((e) => setError(e.message));
   }, [phase, token]);
 
-  // game render
+  // GAME RENDER
   return (
     <>
       <header>

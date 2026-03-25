@@ -20,7 +20,6 @@ router.get("/me", requireUser, (req, res) => {
   res.send(req.user);
 });
 
-// User registration
 router.post(
   "/register",
   requireBody(["username", "email", "password_hash"]),
@@ -31,7 +30,6 @@ router.post(
   }
 );
 
-// User login
 router.post(
   "/login",
   requireBody(["username", "password_hash"]),

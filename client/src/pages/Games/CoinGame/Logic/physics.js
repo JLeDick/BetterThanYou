@@ -1,4 +1,4 @@
-// Physics constants
+// PHYSICS CONSTANTS
 export const COIN_RADIUS = 14;
 export const CUP_RADIUS = 20;
 export const TABLE_RADIUS = 260;
@@ -7,7 +7,7 @@ export const FRICTION = 0.985;
 export const MIN_VELOCITY = 0.1;
 export const MAX_POWER = 14;
 
-// Returns true if any active coin is still moving
+// RETURNS TRUE IF ANY ACTIVE COIN IS STILL MOVING
 export function isMoving(coins) {
   return coins.some(
     (c) =>
@@ -16,12 +16,12 @@ export function isMoving(coins) {
   );
 }
 
-// Run one physics frame. Returns { collisions: [[idA, idB]], fallen: [id] }
+// RUN ONE PHYSICS FRAME. RETURNS { COLLISIONS: [[IDA, IDB]], FALLEN: [ID] }
 export function step(coins, cups) {
   const collisions = [];
   const fallen = [];
 
-  // Move coins and apply friction
+  // MOVE COINS AND APPLY FRICTION
   for (const c of coins) {
     if (!c.active) continue;
     c.x += c.vx;
@@ -35,7 +35,7 @@ export function step(coins, cups) {
     }
   }
 
-  // Coin-coin elastic collisions (equal mass)
+  // COIN-COIN ELASTIC COLLISIONS (EQUAL MASS)
   for (let i = 0; i < coins.length; i++) {
     if (!coins[i].active) continue;
     for (let j = i + 1; j < coins.length; j++) {
@@ -61,7 +61,7 @@ export function step(coins, cups) {
           collisions.push([a.id, b.id]);
         }
 
-        // Separate overlapping coins
+        // SEPARATE OVERLAPPING COINS
         const overlap = minDist - dist;
         a.x -= (overlap / 2) * nx;
         a.y -= (overlap / 2) * ny;
@@ -71,7 +71,7 @@ export function step(coins, cups) {
     }
   }
 
-  // Coin-cup collisions (cups are immovable)
+  // COIN-CUP COLLISIONS (CUPS ARE IMMOVABLE)
   for (const coin of coins) {
     if (!coin.active) continue;
     for (const cup of cups) {
@@ -97,7 +97,7 @@ export function step(coins, cups) {
     }
   }
 
-  // Table boundary — coin falls off when its edge crosses the table edge
+  // TABLE BOUNDARY — COIN FALLS OFF WHEN ITS EDGE CROSSES THE TABLE EDGE
   for (const coin of coins) {
     if (!coin.active) continue;
     const dx = coin.x - TABLE_CENTER.x;

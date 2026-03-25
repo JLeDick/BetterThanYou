@@ -6,18 +6,18 @@ export function render(ctx, state) {
   const W = ctx.canvas.width;
   const H = ctx.canvas.height;
 
-  // Background
+  // BACKGROUND
   ctx.fillStyle = "#080808";
   ctx.fillRect(0, 0, W, H);
 
-  // Table — outer glow
+  // TABLE — OUTER GLOW
   ctx.beginPath();
   ctx.arc(TABLE_CENTER.x, TABLE_CENTER.y, TABLE_RADIUS + 4, 0, Math.PI * 2);
   ctx.strokeStyle = "rgba(194, 42, 42, 0.15)";
   ctx.lineWidth = 10;
   ctx.stroke();
 
-  // Table — surface
+  // TABLE — SURFACE
   const tableGrad = ctx.createRadialGradient(
     TABLE_CENTER.x,
     TABLE_CENTER.y,
@@ -34,22 +34,22 @@ export function render(ctx, state) {
   ctx.fillStyle = tableGrad;
   ctx.fill();
 
-  // Table — edge ring
+  // TABLE — EDGE RING
   ctx.beginPath();
   ctx.arc(TABLE_CENTER.x, TABLE_CENTER.y, TABLE_RADIUS, 0, Math.PI * 2);
   ctx.strokeStyle = "#c22a2a";
   ctx.lineWidth = 2.5;
   ctx.stroke();
 
-  // Cups
+  // CUPS
   for (const cup of cups) {
-    // Shadow
+    // SHADOW
     ctx.beginPath();
     ctx.arc(cup.x + 2, cup.y + 2, CUP_RADIUS, 0, Math.PI * 2);
     ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
     ctx.fill();
 
-    // Body
+    // BODY
     const cupGrad = ctx.createRadialGradient(
       cup.x - 4,
       cup.y - 4,
@@ -69,25 +69,25 @@ export function render(ctx, state) {
     ctx.stroke();
   }
 
-  // Coins
+  // COINS
   for (const coin of coins) {
     if (!coin.active) continue;
 
-    // Shadow
+    // SHADOW
     ctx.beginPath();
     ctx.arc(coin.x + 2, coin.y + 2, COIN_RADIUS, 0, Math.PI * 2);
     ctx.fillStyle = "rgba(0, 0, 0, 0.35)";
     ctx.fill();
 
     if (coin.isShooter) {
-      // Shooter — gold glow
+      // SHOOTER — GOLD GLOW
       ctx.beginPath();
       ctx.arc(coin.x, coin.y, COIN_RADIUS + 4, 0, Math.PI * 2);
       ctx.strokeStyle = "rgba(201, 168, 76, 0.3)";
       ctx.lineWidth = 5;
       ctx.stroke();
 
-      // Shooter — gold gradient
+      // SHOOTER — GOLD GRADIENT
       const goldGrad = ctx.createRadialGradient(
         coin.x - 3,
         coin.y - 3,
@@ -106,7 +106,7 @@ export function render(ctx, state) {
       ctx.lineWidth = 1.5;
       ctx.stroke();
     } else {
-      // Regular coin — silver gradient
+      // REGULAR COIN — SILVER GRADIENT
       const coinGrad = ctx.createRadialGradient(
         coin.x - 3,
         coin.y - 3,
@@ -127,11 +127,11 @@ export function render(ctx, state) {
     }
   }
 
-  // Aiming arrow
+  // AIMING ARROW
   if (arrow) {
     const { startX, startY, endX, endY, power } = arrow;
 
-    // Arrow line
+    // ARROW LINE
     const alpha = 0.4 + power * 0.6;
     ctx.beginPath();
     ctx.moveTo(startX, startY);
@@ -140,7 +140,7 @@ export function render(ctx, state) {
     ctx.lineWidth = 2.5 + power * 1.5;
     ctx.stroke();
 
-    // Arrowhead
+    // ARROWHEAD
     const angle = Math.atan2(endY - startY, endX - startX);
     const headLen = 8 + power * 4;
     ctx.beginPath();
@@ -162,22 +162,22 @@ export function render(ctx, state) {
   // HUD
   ctx.font = "bold 14px system-ui, sans-serif";
 
-  // Lives (left)
+  // LIVES (LEFT)
   ctx.textAlign = "left";
   ctx.fillStyle = "#e0e0e0";
   ctx.fillText(`Lives: ${lives}`, 16, 24);
 
-  // Round (center)
+  // ROUND (CENTER)
   ctx.textAlign = "center";
   ctx.fillStyle = "#c9a84c";
   ctx.fillText(`Round ${round}`, W / 2, 24);
 
-  // Score (right)
+  // SCORE (RIGHT)
   ctx.textAlign = "right";
   ctx.fillStyle = "#e0e0e0";
   ctx.fillText(`Score: ${score}`, W - 16, 24);
 
-  // Shot result notification (center of table, fades after 1.5s)
+  // SHOT RESULT NOTIFICATION (CENTER OF TABLE, FADES AFTER 1.5S)
   if (notification && Date.now() - notification.time < 1500) {
     const age = Date.now() - notification.time;
     const alpha = Math.max(0, 1 - age / 1500);
@@ -186,14 +186,14 @@ export function render(ctx, state) {
     ctx.fillStyle = notification.color
       .replace(")", `, ${alpha})`)
       .replace("rgb", "rgba");
-    // Simpler: just use globalAlpha
+    // SIMPLER: JUST USE GLOBALALPHA
     ctx.globalAlpha = alpha;
     ctx.fillStyle = notification.color;
     ctx.fillText(notification.text, TABLE_CENTER.x, TABLE_CENTER.y);
     ctx.globalAlpha = 1;
   }
 
-  // Phase message (bottom center)
+  // PHASE MESSAGE (BOTTOM CENTER)
   if (message) {
     ctx.textAlign = "center";
     ctx.font = "13px system-ui, sans-serif";

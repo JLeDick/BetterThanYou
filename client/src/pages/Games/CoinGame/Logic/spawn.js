@@ -4,11 +4,11 @@ function distance(a, b) {
   return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
 }
 
-// Random point inside the table, with padding from the edge
+// RANDOM POINT INSIDE THE TABLE, WITH PADDING FROM THE EDGE
 function randomInTable(objectRadius, padding = 30) {
   const maxR = TABLE_RADIUS - objectRadius - padding;
   const angle = Math.random() * Math.PI * 2;
-  const r = Math.sqrt(Math.random()) * maxR; // sqrt for uniform distribution in circle
+  const r = Math.sqrt(Math.random()) * maxR; // SQRT FOR UNIFORM DISTRIBUTION IN CIRCLE
   return {
     x: TABLE_CENTER.x + r * Math.cos(angle),
     y: TABLE_CENTER.y + r * Math.sin(angle),
@@ -16,11 +16,11 @@ function randomInTable(objectRadius, padding = 30) {
 }
 
 export function spawnCoinsAndCups(numCoins = 8, numCups = 1) {
-  const placed = []; // all placed objects for overlap checking
+  const placed = []; // ALL PLACED OBJECTS FOR OVERLAP CHECKING
   const coins = [];
   const cups = [];
 
-  // Place cups first (bigger, harder to fit)
+  // PLACE CUPS FIRST (BIGGER, HARDER TO FIT)
   for (let i = 0; i < numCups; i++) {
     let pos;
     let attempts = 0;
@@ -37,7 +37,7 @@ export function spawnCoinsAndCups(numCoins = 8, numCups = 1) {
     cups.push(cup);
   }
 
-  // Place coins
+  // PLACE COINS
   for (let i = 0; i < numCoins; i++) {
     let pos;
     let attempts = 0;
