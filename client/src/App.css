@@ -1,8 +1,3 @@
-/* ============================================
-   BetterThanYou — Component Styles
-   Dark theme · Red glow · Gold accents
-   ============================================ */
-
 /* === NAV === */
 nav {
   background: var(--bg-primary);
@@ -640,6 +635,17 @@ p[role="alert"] {
   color: var(--gold);
   font-size: 1.75rem;
   font-weight: 700;
+}
+
+/* === COIN GAME === */
+.coin-game-canvas {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  border-radius: var(--radius-lg);
+  touch-action: none;
+  cursor: crosshair;
 }
 
 /* === ANIMATIONS === */

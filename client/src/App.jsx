@@ -6,6 +6,7 @@ import Register from "./pages/Register/Register";
 import Home from "./pages/Home/Home";
 import ColorGame from "./pages/Games/ColorGame/Game/colorGame";
 import TypingSpeed from "./pages/Games/TypingSpeed/Game/TypingSpeed";
+import CoinGame from "./pages/Games/CoinGame/Game/CoinGame";
 import Compare from "./pages/Compare/Compare";
 import Stats from "./pages/Stats/Stats";
 import Leaderboard from "./pages/Leaderboard/Leaderboard";
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/games/color-game" element={<ColorGame />} />
         <Route path="/games/typing-speed" element={<TypingSpeed />} />
+        <Route path="/games/coin-game" element={<CoinGame />} />
         <Route path="/compare" element={<Compare />} />
         <Route path="/stats" element={<Stats />} />
         <Route path="/leaderboard" element={<Leaderboard />} />

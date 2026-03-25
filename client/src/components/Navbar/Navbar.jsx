@@ -6,6 +6,8 @@ export default function Navbar() {
   const { token, logout } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
+  // useLocation => URL new object => set to location =>
+  // useEffect[location] => new page => setOpenMenu(false)
 
   // Close menu when navigating to a new page
   useEffect(() => {

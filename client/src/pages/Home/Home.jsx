@@ -18,6 +18,11 @@ export default function Home() {
           <h2>Typing Test</h2>
           <p>Test your speed and accuracy</p>
         </Link>
+
+        <Link to="/games/coin-game" className="game-tile">
+          <h2>Coin Game</h2>
+          <p>Flick coins off the table</p>
+        </Link>
       </div>
     </>
   );

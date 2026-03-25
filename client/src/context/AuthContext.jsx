@@ -1,9 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AuthContext, HOST } from "./AuthContext.js";
 
 export default function AuthProvider({ children }) {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [user, setUser] = useState(null);
+
+  // On page load, if a token exists, fetch the user data
+  useEffect(() => {
+    if (!token) return;
+    fetch(`${HOST}api/users/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data) => setUser(data))
+      .catch(() => {
+        localStorage.removeItem("token");
+        setToken(null);
+      });
+  }, []);
 
   const register = async ({ username, email, password }) => {
     const response = await fetch(`${HOST}api/users/register`, {
