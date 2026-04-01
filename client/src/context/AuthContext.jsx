@@ -23,7 +23,7 @@ export default function AuthProvider({ children }) {
     const response = await fetch(`${HOST}api/users/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email, password_hash: password }),
+      body: JSON.stringify({ username, email, password }),
     });
 
     if (!response.ok) {
@@ -48,7 +48,7 @@ export default function AuthProvider({ children }) {
     const response = await fetch(`${HOST}api/users/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password_hash: password }),
+      body: JSON.stringify({ username, password }),
     });
 
     if (!response.ok) {

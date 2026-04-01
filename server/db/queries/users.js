@@ -6,8 +6,8 @@ export async function getUsers() {
   return rows;
 }
 
-export async function registerUser({ username, email, password_hash }) {
-  const hashedPassword = await bcrypt.hash(password_hash, 10);
+export async function registerUser({ username, email, password }) {
+  const hashedPassword = await bcrypt.hash(password, 10);
   const {
     rows: [registeredUser],
   } = await db.query(
@@ -28,7 +28,7 @@ export async function getUserByUsername({ username }) {
 
 export async function getUserByUsernameAndPassword({
   username,
-  password_hash,
+  password,
 }) {
   const {
     rows: [user],
@@ -36,7 +36,7 @@ export async function getUserByUsernameAndPassword({
 
   if (!user) return null;
 
-  const isValid = await bcrypt.compare(password_hash, user.password_hash);
+  const isValid = await bcrypt.compare(password, user.password_hash);
   if (!isValid) return null;
 
   return user;
