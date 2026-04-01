@@ -10,6 +10,7 @@ import {
   setResetToken,
   getUserByResetToken,
   updatePassword,
+  changePassword,
 } from "#db/queries/users";
 import requireBody from "#middleware/requireBody";
 import requireUser from "#middleware/requireUser";
@@ -138,6 +139,22 @@ router.post(
     await updatePassword({ user_id: user.id, password_hash: hashedPassword });
 
     res.send("Password updated successfully.");
+  }
+);
+
+router.post(
+  "/change-password",
+  requireUser,
+  requireBody(["current_password", "new_password"]),
+  async (req, res) => {
+    const { current_password, new_password } = req.body;
+    const { error } = await changePassword({
+      user_id: req.user.id,
+      current_password,
+      new_password,
+    });
+    if (error) return res.status(400).send(error);
+    res.send("Password changed successfully.");
   }
 );
 

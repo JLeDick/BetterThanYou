@@ -14,6 +14,7 @@ import Group from "./pages/Group/Group";
 import VerifyEmail from "./pages/VerifyEmail/VerifyEmail";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
+import Account from "./pages/Account/Account";
 
 import "./App.css";
 
@@ -34,6 +35,7 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/account" element={<Account />} />
       </Route>
     </Routes>
   );

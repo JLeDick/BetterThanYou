@@ -45,6 +45,7 @@ export default function Navbar() {
               <Link to="/leaderboard">Leaderboard</Link>
               <Link to="/compare">Compare</Link>
               <Link to="/groups">Groups</Link>
+              <Link to="/account">Account</Link>
               <button onClick={logout}>Logout</button>
             </>
           ) : (

@@ -670,6 +670,59 @@ p[role="alert"] {
   cursor: crosshair;
 }
 
+/* === ACCOUNT === */
+.account-info {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 1px 12px rgba(194, 42, 42, 0.08);
+}
+
+.account-field {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.account-field:last-child {
+  border-bottom: none;
+}
+
+.account-label {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.account-value {
+  color: var(--gold);
+}
+
+.account-password {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 1px 12px rgba(194, 42, 42, 0.08);
+}
+
+.account-password h3 {
+  margin-bottom: 1rem;
+}
+
+.success-msg {
+  color: var(--gold);
+  margin-top: 0.5rem;
+}
+
 /* === GROUPS === */
 .groups-forms {
   display: flex;

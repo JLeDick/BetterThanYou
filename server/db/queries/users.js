@@ -103,6 +103,20 @@ export async function getUserByResetToken({ token }) {
   return user;
 }
 
+export async function changePassword({ user_id, current_password, new_password }) {
+  const {
+    rows: [user],
+  } = await db.query(`SELECT password_hash FROM users WHERE id = $1`, [user_id]);
+  if (!user) return { error: "User not found." };
+
+  const isValid = await bcrypt.compare(current_password, user.password_hash);
+  if (!isValid) return { error: "Current password is incorrect." };
+
+  const hashed = await bcrypt.hash(new_password, 10);
+  await db.query(`UPDATE users SET password_hash = $1 WHERE id = $2`, [hashed, user_id]);
+  return { error: null };
+}
+
 export async function updatePassword({ user_id, password_hash }) {
   await db.query(
     `UPDATE users
