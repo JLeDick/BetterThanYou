@@ -10,8 +10,8 @@ export function generateColors(round) {
 
   const baseAvg = (r + g + b) / 3;
 
-  // Similarity: starts at 50%, hits 80% at round 50, halves remaining gap every 38 rounds
-  const blend = 1 - 0.5 * Math.pow(0.5, round / 38);
+  // Similarity: starts at 50%, hits 80% at round 50, halves remaining gap every 25 rounds
+  const blend = 1 - 0.5 * Math.pow(0.5, round / 25);
 
   // Offset color high if baseAvg low, low if baseAvg high
   let anchor = 0;
