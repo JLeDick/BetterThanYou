@@ -79,7 +79,7 @@ export async function getGameScores(gameId) {
 
 export async function compareUsers(username1, username2) {
   const res = await fetch(
-    `${HOST}api/scores/compare/${username1}/${username2}`
+    `${HOST}api/scores/compare?users=${username1},${username2}`
   );
   if (!res.ok) throw new Error(await res.text());
   return await res.json();

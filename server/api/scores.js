@@ -20,9 +20,17 @@ router.post(
   }
 );
 
-router.get("/compare/:username1/:username2", async (req, res) => {
-  const user1 = await getUserByUsername({ username: req.params.username1 });
-  const user2 = await getUserByUsername({ username: req.params.username2 });
+router.get("/compare", async (req, res) => {
+  const users = req.query.users;
+  if (!users) return res.status(400).send("Missing users query parameter");
+
+  const [username1, username2] = users.split(",");
+  if (!username1 || !username2) {
+    return res.status(400).send("Provide two comma-separated usernames");
+  }
+
+  const user1 = await getUserByUsername({ username: username1 });
+  const user2 = await getUserByUsername({ username: username2 });
 
   if (!user1 || !user2) {
     return res.status(404).send("User not found");
