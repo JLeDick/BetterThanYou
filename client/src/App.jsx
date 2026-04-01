@@ -11,6 +11,9 @@ import Compare from "./pages/Compare/Compare";
 import Stats from "./pages/Stats/Stats";
 import Leaderboard from "./pages/Leaderboard/Leaderboard";
 import Group from "./pages/Group/Group";
+import VerifyEmail from "./pages/VerifyEmail/VerifyEmail";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword/ResetPassword";
 
 import "./App.css";
 
@@ -28,6 +31,9 @@ function App() {
         <Route path="/stats" element={<Stats />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/groups" element={<Group />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Route>
     </Routes>
   );

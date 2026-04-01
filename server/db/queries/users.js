@@ -45,6 +45,69 @@ export async function getUserByUsernameAndPassword({
 export async function getUserById({ id }) {
   const {
     rows: [user],
-  } = await db.query(`SELECT * FROM users WHERE id = $1`, [id]);
+  } = await db.query(
+    `SELECT id, username, email, email_verified FROM users WHERE id = $1`,
+    [id]
+  );
   return user;
+}
+
+export async function getUserByEmail({ email }) {
+  const {
+    rows: [user],
+  } = await db.query(`SELECT * FROM users WHERE email = $1`, [email]);
+  return user;
+}
+
+export async function setVerificationToken({ user_id, token, expires }) {
+  await db.query(
+    `UPDATE users
+     SET verification_token = $1, verification_token_expires = $2
+     WHERE id = $3`,
+    [token, expires, user_id]
+  );
+}
+
+export async function verifyUserEmail({ token }) {
+  const {
+    rows: [user],
+  } = await db.query(
+    `UPDATE users
+     SET email_verified = true, verification_token = NULL, verification_token_expires = NULL
+     WHERE verification_token = $1
+       AND verification_token_expires > NOW()
+     RETURNING id, username, email`,
+    [token]
+  );
+  return user;
+}
+
+export async function setResetToken({ user_id, token, expires }) {
+  await db.query(
+    `UPDATE users
+     SET reset_token = $1, reset_token_expires = $2
+     WHERE id = $3`,
+    [token, expires, user_id]
+  );
+}
+
+export async function getUserByResetToken({ token }) {
+  const {
+    rows: [user],
+  } = await db.query(
+    `SELECT id, username, email FROM users
+     WHERE reset_token = $1
+       AND reset_token_expires > NOW()`,
+    [token]
+  );
+  return user;
+}
+
+export async function updatePassword({ user_id, password_hash }) {
+  await db.query(
+    `UPDATE users
+     SET password_hash = $1, reset_token = NULL, reset_token_expires = NULL
+     WHERE id = $2`,
+    [password_hash, user_id]
+  );
 }

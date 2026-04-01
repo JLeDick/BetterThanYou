@@ -126,6 +126,25 @@ nav {
   }
 }
 
+/* === VERIFICATION BANNER === */
+.verification-banner {
+  background: var(--gold-dim);
+  color: var(--bg-deep);
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.verification-banner button {
+  background: none;
+  border: none;
+  text-decoration: underline;
+  cursor: pointer;
+  color: var(--bg-deep);
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
 /* === LAYOUT === */
 main {
   flex: 1;

@@ -1,47 +1,70 @@
 import { Link, useLocation } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext.js";
+import { AuthContext, HOST } from "../../context/AuthContext.js";
 import { use, useState, useEffect } from "react";
 
 export default function Navbar() {
-  const { token, logout } = use(AuthContext);
+  const { token, user, logout } = use(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
   const location = useLocation();
-  // useLocation => URL new object => set to location =>
-  // useEffect[location] => new page => setOpenMenu(false)
 
-  // Close menu when navigating to a new page
   useEffect(() => {
     setMenuOpen(false);
   }, [location]);
 
+  const handleResendVerification = async () => {
+    try {
+      await fetch(`${HOST}api/users/resend-verification`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      alert("Verification email sent! Check your inbox.");
+    } catch {
+      alert("Failed to send email. Try again later.");
+    }
+  };
+
+  const showBanner = token && user && !user.email_verified && !bannerDismissed;
+
   return (
-    <nav>
-      <div className="nav-bar">
-        <Link to="/" className="nav-brand">
-          BetterThanYou
-        </Link>
-        <button className="nav-toggle" onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? "✕" : "☰"}
-        </button>
-      </div>
-      <div className={`menu-dropdown${menuOpen ? " open" : ""}`}>
-        {token ? (
-          <>
-            <Link to="/">Home</Link>
-            <Link to="/stats">Stats</Link>
-            <Link to="/leaderboard">Leaderboard</Link>
-            <Link to="/compare">Compare</Link>
-            <Link to="/groups">Groups</Link>
-            <button onClick={logout}>Logout</button>
-          </>
-        ) : (
-          <>
-            <Link to="/">Home</Link>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link>
-          </>
-        )}
-      </div>
-    </nav>
+    <>
+      <nav>
+        <div className="nav-bar">
+          <Link to="/" className="nav-brand">
+            BetterThanYou
+          </Link>
+          <button className="nav-toggle" onClick={() => setMenuOpen(!menuOpen)}>
+            {menuOpen ? "\u2715" : "\u2630"}
+          </button>
+        </div>
+        <div className={`menu-dropdown${menuOpen ? " open" : ""}`}>
+          {token ? (
+            <>
+              <Link to="/">Home</Link>
+              <Link to="/stats">Stats</Link>
+              <Link to="/leaderboard">Leaderboard</Link>
+              <Link to="/compare">Compare</Link>
+              <Link to="/groups">Groups</Link>
+              <button onClick={logout}>Logout</button>
+            </>
+          ) : (
+            <>
+              <Link to="/">Home</Link>
+              <Link to="/login">Login</Link>
+              <Link to="/register">Register</Link>
+            </>
+          )}
+        </div>
+      </nav>
+      {showBanner && (
+        <div className="verification-banner">
+          <p>
+            Please verify your email.{" "}
+            <button onClick={handleResendVerification}>Resend email</button>
+            <button onClick={() => setBannerDismissed(true)}>Dismiss</button>
+          </p>
+        </div>
+      )}
+    </>
   );
 }

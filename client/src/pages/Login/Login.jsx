@@ -46,7 +46,7 @@ export default function Login() {
         <Link to="/register">Register here</Link>
 
         <p>Forgot your password?</p>
-        <Link to="/recover">Recover password</Link>
+        <Link to="/forgot-password">Recover password</Link>
       </div>
     </div>
   );
