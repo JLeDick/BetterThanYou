@@ -12,6 +12,13 @@ import {
   resetPassword,
   updatePassword,
 } from "#db/queries/users";
+import {
+  getScoresByUser,
+  getTopScoresByUser,
+  getDailyTopScores,
+  getWeeklyTopScores,
+  getMonthlyTopScores,
+} from "#db/queries/scores";
 import requireBody from "#middleware/requireBody";
 import requireUser from "#middleware/requireUser";
 import { createToken } from "#utils/jwt";
@@ -157,5 +164,21 @@ router.post(
     res.send("Password changed successfully.");
   }
 );
+
+router.get("/:userId/scores", async (req, res) => {
+  const scores = await getScoresByUser({ userId: req.params.userId });
+  res.send(scores);
+});
+
+router.get("/:userId/stats", async (req, res) => {
+  const userId = req.params.userId;
+  const [allTime, daily, weekly, monthly] = await Promise.all([
+    getTopScoresByUser({ userId }),
+    getDailyTopScores({ userId }),
+    getWeeklyTopScores({ userId }),
+    getMonthlyTopScores({ userId }),
+  ]);
+  res.send({ allTime, daily, weekly, monthly });
+});
 
 export default router;

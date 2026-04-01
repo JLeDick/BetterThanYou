@@ -66,13 +66,13 @@ export async function createScore({ token, gameId, score }) {
 }
 
 export async function getUserStats(userId) {
-  const res = await fetch(`${HOST}api/scores/stats/${userId}`);
+  const res = await fetch(`${HOST}api/users/${userId}/stats`);
   if (!res.ok) throw new Error(await res.text());
   return await res.json();
 }
 
 export async function getGameScores(gameId) {
-  const res = await fetch(`${HOST}api/scores/game/${gameId}`);
+  const res = await fetch(`${HOST}api/games/${gameId}/scores`);
   if (!res.ok) throw new Error(await res.text());
   return await res.json();
 }
