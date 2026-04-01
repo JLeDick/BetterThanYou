@@ -6,7 +6,7 @@ export async function getUsers() {
   return rows;
 }
 
-export async function registerUser({ username, email, password }) {
+export async function createUser({ username, email, password }) {
   const hashedPassword = await bcrypt.hash(password, 10);
   const {
     rows: [registeredUser],
@@ -59,7 +59,7 @@ export async function getUserByEmail({ email }) {
   return user;
 }
 
-export async function setVerificationToken({ userId, token, expires }) {
+export async function updateVerificationToken({ userId, token, expires }) {
   await db.query(
     `UPDATE users
      SET verification_token = $1, verification_token_expires = $2
@@ -82,7 +82,7 @@ export async function verifyUserEmail({ token }) {
   return user;
 }
 
-export async function setResetToken({ userId, token, expires }) {
+export async function updateResetToken({ userId, token, expires }) {
   await db.query(
     `UPDATE users
      SET reset_token = $1, reset_token_expires = $2
@@ -103,7 +103,7 @@ export async function getUserByResetToken({ token }) {
   return user;
 }
 
-export async function changePassword({ userId, currentPassword, newPassword }) {
+export async function updatePassword({ userId, currentPassword, newPassword }) {
   const {
     rows: [user],
   } = await db.query(`SELECT password_hash FROM users WHERE id = $1`, [userId]);
@@ -117,7 +117,7 @@ export async function changePassword({ userId, currentPassword, newPassword }) {
   return { error: null };
 }
 
-export async function updatePassword({ userId, passwordHash }) {
+export async function resetPassword({ userId, passwordHash }) {
   await db.query(
     `UPDATE users
      SET password_hash = $1, reset_token = NULL, reset_token_expires = NULL

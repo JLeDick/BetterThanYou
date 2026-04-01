@@ -1,6 +1,6 @@
 import db from "#db/client";
 
-export async function submitScore({ userId, gameId, score }) {
+export async function createScore({ userId, gameId, score }) {
   const {
     rows: [newScore],
   } = await db.query(
@@ -78,7 +78,7 @@ export async function getMaxScoresByGame({ gameId }) {
   return rows;
 }
 
-export async function getAllTopScoresOfUser({ userId }) {
+export async function getTopScoresByUser({ userId }) {
   const { rows } = await db.query(
     `
     SELECT games.id AS "gameId", games.name, MAX(scores.score) AS "topScore"

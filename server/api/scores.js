@@ -1,12 +1,12 @@
 import express from "express";
 import {
-  submitScore,
+  createScore,
   getScoresByGame,
   getScoresByUser,
   getTopScoreByGameAndUser,
   getScoresByGameAndUser,
   getMaxScoresByGame,
-  getAllTopScoresOfUser,
+  getTopScoresByUser,
   getDailyTopScores,
   getWeeklyTopScores,
   getMonthlyTopScores,
@@ -22,7 +22,7 @@ router.post(
   requireUser,
   requireBody(["gameId", "score"]),
   async (req, res) => {
-    const score = await submitScore({
+    const score = await createScore({
       userId: req.user.id,
       gameId: req.body.gameId,
       score: req.body.score,
@@ -57,15 +57,15 @@ router.get("/compare/:username1/:username2", async (req, res) => {
     return res.status(404).send("User not found");
   }
 
-  const user1Scores = await getAllTopScoresOfUser({ userId: user1.id });
-  const user2Scores = await getAllTopScoresOfUser({ userId: user2.id });
+  const user1Scores = await getTopScoresByUser({ userId: user1.id });
+  const user2Scores = await getTopScoresByUser({ userId: user2.id });
   res.send({ user1: user1Scores, user2: user2Scores });
 });
 
 router.get("/stats/:userId", async (req, res) => {
   const userId = req.params.userId;
   const [allTime, daily, weekly, monthly] = await Promise.all([
-    getAllTopScoresOfUser({ userId }),
+    getTopScoresByUser({ userId }),
     getDailyTopScores({ userId }),
     getWeeklyTopScores({ userId }),
     getMonthlyTopScores({ userId }),

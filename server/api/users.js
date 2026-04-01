@@ -4,13 +4,13 @@ import bcrypt from "bcrypt";
 import {
   getUserByUsernameAndPassword,
   getUserByEmail,
-  registerUser,
-  setVerificationToken,
+  createUser,
+  updateVerificationToken,
   verifyUserEmail,
-  setResetToken,
+  updateResetToken,
   getUserByResetToken,
+  resetPassword,
   updatePassword,
-  changePassword,
 } from "#db/queries/users";
 import requireBody from "#middleware/requireBody";
 import requireUser from "#middleware/requireUser";
@@ -30,11 +30,11 @@ router.post(
   "/register",
   requireBody(["username", "email", "password"]),
   async (req, res) => {
-    const user = await registerUser(req.body);
+    const user = await createUser(req.body);
 
     const verificationToken = crypto.randomBytes(32).toString("hex");
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
-    await setVerificationToken({
+    await updateVerificationToken({
       userId: user.id,
       token: verificationToken,
       expires,
@@ -84,7 +84,7 @@ router.post("/resend-verification", requireUser, async (req, res) => {
 
   const verificationToken = crypto.randomBytes(32).toString("hex");
   const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
-  await setVerificationToken({
+  await updateVerificationToken({
     userId: req.user.id,
     token: verificationToken,
     expires,
@@ -114,7 +114,7 @@ router.post(
 
     const resetToken = crypto.randomBytes(32).toString("hex");
     const expires = new Date(Date.now() + 60 * 60 * 1000);
-    await setResetToken({ userId: user.id, token: resetToken, expires });
+    await updateResetToken({ userId: user.id, token: resetToken, expires });
 
     try {
       await sendPasswordResetEmail({ email: user.email, token: resetToken });
@@ -136,7 +136,7 @@ router.post(
     }
 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    await updatePassword({ userId: user.id, passwordHash: hashedPassword });
+    await resetPassword({ userId: user.id, passwordHash: hashedPassword });
 
     res.send("Password updated successfully.");
   }
@@ -148,7 +148,7 @@ router.post(
   requireBody(["currentPassword", "newPassword"]),
   async (req, res) => {
     const { currentPassword, newPassword } = req.body;
-    const { error } = await changePassword({
+    const { error } = await updatePassword({
       userId: req.user.id,
       currentPassword,
       newPassword,
