@@ -14,6 +14,15 @@ import { render } from "../Logic/renderer";
 const CANVAS_SIZE = 600;
 const MAX_DRAG = 300;
 
+/**
+ * Canvas-based physics game inspired by carrom/shuffleboard. Flick a coin to hit
+ * exactly one other coin per turn. Hit 0 or 2+ = lose a life. Coins that fall off
+ * the table also cost lives. Clear all coins in a round for a 2x score bonus.
+ *
+ * Uses useRef for mutable game state (coins, physics) to avoid stale closures in
+ * the requestAnimationFrame loop. A parallel phaseRef/setPhase pattern keeps the
+ * game loop reading fresh phase values while still triggering React re-renders.
+ */
 export default function CoinGame() {
   const { token } = useContext(AuthContext);
   const canvasRef = useRef(null);
@@ -24,8 +33,7 @@ export default function CoinGame() {
   const [error, setError] = useState(null);
   const [finalScore, setFinalScore] = useState(null);
 
-  // UPDATE BOTH THE REF AND REACT STATE SO THE GAME LOOP ALWAYS
-  // READS THE LATEST PHASE AND REACT RE-RENDERS FOR UI CHANGES
+  // Sync ref (for game loop reads) and state (for React re-renders)
   const setGamePhase = useCallback((p) => {
     phaseRef.current = p;
     setPhase(p);
@@ -51,7 +59,7 @@ export default function CoinGame() {
     setGamePhase("picking");
   };
 
-  // GAME LOOP + SHOT RESOLUTION
+  // Game loop + shot resolution
   const isActive = phase !== "idle" && phase !== "gameOver";
 
   useEffect(() => {
@@ -61,21 +69,21 @@ export default function CoinGame() {
     const ctx = canvas.getContext("2d");
     let running = true;
 
-    // RESOLVE THE SHOT ONCE ALL COINS STOP
+    // Resolve the shot once all coins stop moving
     const resolveShot = () => {
       const g = gameRef.current;
       const fallen = g.fallenThisShot;
 
-      // ALL COINS DISTURBED THIS TURN, MINUS THE SHOOTER = "HIT COINS"
+      // All coins disturbed this turn, minus the shooter = "hit coins"
       const hitCoins = new Set(g.touchedCoins);
       hitCoins.delete(g.shooterId);
 
-      let livesLost = fallen.length; // EACH FALLEN COIN COSTS 1 LIFE
+      let livesLost = fallen.length; // each fallen coin costs 1 life
       let success = false;
       let nextShooterId = null;
 
       if (hitCoins.size === 1 && fallen.length === 0) {
-        // CLEAN HIT — EXACTLY 1 OTHER COIN DISTURBED, NOTHING FELL
+        // Clean hit - exactly 1 other coin disturbed, nothing fell
         success = true;
         nextShooterId = [...hitCoins][0];
         const shooter = g.coins.find((c) => c.id === g.shooterId);
@@ -91,14 +99,14 @@ export default function CoinGame() {
           time: Date.now(),
         };
       } else if (hitCoins.size === 0 && fallen.length === 0) {
-        livesLost += 1; // PURE WHIFF
+        livesLost += 1; // whiff
         g.notification = {
           text: "Miss! -1 Life",
           color: "#e04040",
           time: Date.now(),
         };
       } else if (hitCoins.size >= 2) {
-        livesLost += 1; // MULTI-HIT: MORE THAN 1 COIN DISTURBED
+        livesLost += 1; // multi-hit penalty
         g.notification = {
           text: "Multi-hit! -1 Life",
           color: "#e04040",
@@ -122,9 +130,9 @@ export default function CoinGame() {
 
       const remaining = g.coins.filter((c) => c.active);
 
-      // ROUND CLEAR CHECK
+      // Round clear - award 2x bonus for clearing all coins
       if (success && remaining.length <= 1) {
-        g.score += g.roundScore; // DOUBLE POINTS FOR THE ROUND
+        g.score += g.roundScore; // double points for the round
         g.round += 1;
         g.notification = {
           text: `Round Clear! 2x bonus! Score: ${g.score}`,
@@ -140,7 +148,7 @@ export default function CoinGame() {
         return;
       }
 
-      // NOT ENOUGH COINS TO CONTINUE
+      // Not enough coins to continue - advance round without bonus
       if (remaining.length < 2 && livesLost < 2) {
         g.round += 1;
         g.notification = {
@@ -171,7 +179,7 @@ export default function CoinGame() {
         return;
       }
 
-      // SET UP NEXT TURN
+      // Set up next turn - successful hit auto-selects the coin you hit
       if (success && nextShooterId !== null) {
         const next = g.coins.find((c) => c.id === nextShooterId && c.active);
         if (next) {
@@ -199,11 +207,10 @@ export default function CoinGame() {
       const g = gameRef.current;
       if (!g) return;
 
-      // RUN PHYSICS WHEN SIMULATING
       if (phaseRef.current === "simulating") {
         const { collisions, fallen } = step(g.coins, g.cups);
 
-        // TRACK ALL COINS INVOLVED IN ANY COLLISION
+        // Track all coins involved in any collision to determine hit count
         for (const [a, b] of collisions) {
           g.touchedCoins.add(a);
           g.touchedCoins.add(b);
@@ -215,13 +222,11 @@ export default function CoinGame() {
         }
       }
 
-      // DETERMINE PHASE MESSAGE
       let message = null;
       if (phaseRef.current === "picking") message = "Click a coin to select";
       else if (phaseRef.current === "aiming" && !g.isDragging)
         message = "Drag from your coin to aim";
 
-      // RENDER
       render(ctx, {
         coins: g.coins,
         cups: g.cups,
@@ -243,7 +248,7 @@ export default function CoinGame() {
     };
   }, [isActive, setGamePhase]);
 
-  // INPUT HANDLING
+  // Input handling - pointer events on canvas, drag events on window
   useEffect(() => {
     if (!isActive) return;
 
@@ -306,7 +311,7 @@ export default function CoinGame() {
       const shooter = g.coins.find((c) => c.id === g.shooterId);
       if (!shooter) return;
 
-      // ARROW POINTS OPPOSITE TO DRAG DIRECTION
+      // Arrow points opposite to drag (slingshot mechanic)
       const dx = g.dragStart.x - pos.x;
       const dy = g.dragStart.y - pos.y;
       const dragDist = Math.sqrt(dx * dx + dy * dy);
@@ -333,7 +338,7 @@ export default function CoinGame() {
       const arrowData = g.arrow;
       g.arrow = null;
 
-      if (!arrowData || arrowData.power < 0.06) return; // TOO WEAK
+      if (!arrowData || arrowData.power < 0.06) return; // ignore tiny flicks
 
       const shooter = g.coins.find((c) => c.id === g.shooterId);
       if (!shooter) return;
@@ -349,8 +354,8 @@ export default function CoinGame() {
       setPhase("simulating");
     };
 
-    // CANVAS GETS MOUSEDOWN/TOUCHSTART; WINDOW GETS MOVE/UP
-    // SO DRAGGING WORKS EVEN IF CURSOR LEAVES THE CANVAS
+    // Canvas gets down events; window gets move/up so dragging
+    // continues even if the cursor leaves the canvas
     canvas.addEventListener("mousedown", handleDown);
     canvas.addEventListener("touchstart", handleDown, { passive: false });
     window.addEventListener("mousemove", handleMove);
@@ -368,7 +373,7 @@ export default function CoinGame() {
     };
   }, [isActive]);
 
-  // SUBMITS SCORE AFTER GAME
+  // Submit score after game ends
   useEffect(() => {
     if (phase !== "gameOver" || !token || !gameRef.current) return;
     const score = gameRef.current.score;
@@ -377,7 +382,6 @@ export default function CoinGame() {
     createScore({ token, gameId: 3, score }).catch((e) => setError(e.message));
   }, [phase, token]);
 
-  // GAME RENDER
   return (
     <>
       <header>

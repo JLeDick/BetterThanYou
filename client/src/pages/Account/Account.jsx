@@ -5,6 +5,7 @@ import { changePassword } from "../../api/queries.js";
 export default function Account() {
   const { token, user } = use(AuthContext);
 
+  // change password
   const [state, submitAction, isPending] = useActionState(
     async (_prev, formData) => {
       const current = formData.get("current");

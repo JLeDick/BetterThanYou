@@ -3,6 +3,10 @@ import { AuthContext } from "../../../../context/AuthContext.js";
 import { createScore } from "../../../../api/queries.js";
 import { generateColors } from "../Logic/colors.js";
 
+/**
+ * Pick the odd-colored block from a grid. Each correct pick advances the round
+ * and tightens the color difference. Score = rounds completed before a miss.
+ */
 export default function ColorGame() {
   const { token } = use(AuthContext);
   const [error, setError] = useState(null);

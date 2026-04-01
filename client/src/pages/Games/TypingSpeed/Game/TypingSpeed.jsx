@@ -6,6 +6,10 @@ import accuracyCalc from "../Logic/accuracyCalc";
 import getRandomWords from "../Logic/wordSelection";
 import calcScore from "../Logic/calcScore";
 
+/**
+ * 30-second typing test. Words are submitted on space. Score = WPM * (accuracy/100)^2,
+ * so accuracy is heavily penalized to reward clean typing over raw speed.
+ */
 export default function TypingSpeed() {
   const { token } = use(AuthContext);
   const [error, setError] = useState(null);
@@ -36,7 +40,7 @@ export default function TypingSpeed() {
     });
   };
 
-  // Timer
+  // Countdown timer - ends the game when it hits 0
   useEffect(() => {
     if (!game.started || game.over) return;
 
