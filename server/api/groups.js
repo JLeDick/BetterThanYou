@@ -14,7 +14,6 @@ import requireBody from "#middleware/requireBody";
 
 const router = express.Router();
 
-// Create a new group
 router.post(
   "/",
   requireUser,
@@ -22,26 +21,25 @@ router.post(
   async (req, res) => {
     const group = await createGroup({
       name: req.body.name,
-      created_by: req.user.id,
+      createdBy: req.user.id,
     });
     res.status(201).send(group);
   }
 );
 
-// Join a group via invite code
 router.post(
   "/join",
   requireUser,
-  requireBody(["invite_code"]),
+  requireBody(["inviteCode"]),
   async (req, res) => {
     const group = await getGroupByInviteCode({
-      invite_code: req.body.invite_code,
+      inviteCode: req.body.inviteCode,
     });
     if (!group) return res.status(404).send("Invalid invite code");
 
     const member = await joinGroup({
-      group_id: group.id,
-      user_id: req.user.id,
+      groupId: group.id,
+      userId: req.user.id,
     });
 
     if (!member) return res.status(409).send("Already a member");
@@ -49,30 +47,27 @@ router.post(
   }
 );
 
-// List groups the current user belongs to
 router.get("/mine", requireUser, async (req, res) => {
-  const groups = await getGroupsByUser({ user_id: req.user.id });
+  const groups = await getGroupsByUser({ userId: req.user.id });
   res.send(groups);
 });
 
-// Get group details + leaderboard
 router.get("/:id", requireUser, async (req, res) => {
-  const group_id = parseInt(req.params.id);
-  const member = await isMember({ group_id, user_id: req.user.id });
+  const groupId = parseInt(req.params.id);
+  const member = await isMember({ groupId, userId: req.user.id });
   if (!member) return res.status(403).send("Not a member of this group");
 
   const [details, leaderboard] = await Promise.all([
-    getGroupDetails({ group_id }),
-    getGroupLeaderboard({ group_id }),
+    getGroupDetails({ groupId }),
+    getGroupLeaderboard({ groupId }),
   ]);
 
   res.send({ ...details, leaderboard });
 });
 
-// Leave a group
 router.delete("/:id/leave", requireUser, async (req, res) => {
-  const group_id = parseInt(req.params.id);
-  await leaveGroup({ group_id, user_id: req.user.id });
+  const groupId = parseInt(req.params.id);
+  await leaveGroup({ groupId, userId: req.user.id });
   res.send("Left group");
 });
 

@@ -52,7 +52,7 @@ export default function ColorGame() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ game_id: 1, score }),
+      body: JSON.stringify({ gameId: 1, score }),
     }).catch((e) => setError(e.message));
   }, [game.over, game.round, token]);
 

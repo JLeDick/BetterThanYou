@@ -21,7 +21,7 @@ export default function Account() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ current_password: current, new_password: password }),
+          body: JSON.stringify({ currentPassword: current, newPassword: password }),
         });
         const message = await res.text();
         if (!res.ok) return { success: false, error: message };
@@ -53,7 +53,7 @@ export default function Account() {
         <div className="account-field">
           <span className="account-label">Email Verified</span>
           <span className="account-value">
-            {user?.email_verified ? "Yes" : "No"}
+            {user?.emailVerified ? "Yes" : "No"}
           </span>
         </div>
       </div>

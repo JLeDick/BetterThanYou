@@ -24,7 +24,7 @@ export default function Navbar() {
     }
   };
 
-  const showBanner = token && user && !user.email_verified && !bannerDismissed;
+  const showBanner = token && user && !user.emailVerified && !bannerDismissed;
 
   return (
     <>

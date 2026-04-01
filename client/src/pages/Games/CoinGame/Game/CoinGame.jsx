@@ -379,7 +379,7 @@ export default function CoinGame() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ game_id: 3, score }),
+      body: JSON.stringify({ gameId: 3, score }),
     }).catch((e) => setError(e.message));
   }, [phase, token]);
 

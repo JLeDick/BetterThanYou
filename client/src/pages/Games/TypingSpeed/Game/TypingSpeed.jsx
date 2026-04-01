@@ -63,7 +63,7 @@ export default function TypingSpeed() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ game_id: 2, score: score }),
+      body: JSON.stringify({ gameId: 2, score: score }),
     }).catch((e) => setError(e.message));
   }, [game.over]);
 

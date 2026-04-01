@@ -56,16 +56,16 @@ export default function Compare() {
             <h2>{usernames.user1}</h2>
             {results.user1.map((game) => {
               const opponent = results.user2.find(
-                (g) => g.game_id === game.game_id
+                (g) => g.gameId === game.gameId
               );
-              const diff = game.top_score - (opponent ? opponent.top_score : 0);
+              const diff = game.topScore - (opponent ? opponent.topScore : 0);
               return (
                 <div
-                  key={game.game_id}
+                  key={game.gameId}
                   className={`game-score ${diff >= 0 ? "winning" : "losing"}`}
                 >
                   <h3>{game.name}</h3>
-                  <p>Top: {game.top_score}</p>
+                  <p>Top: {game.topScore}</p>
                   <p>{diff >= 0 ? `+${diff}` : diff}</p>
                 </div>
               );
@@ -76,16 +76,16 @@ export default function Compare() {
             <h2>{usernames.user2}</h2>
             {results.user2.map((game) => {
               const opponent = results.user1.find(
-                (g) => g.game_id === game.game_id
+                (g) => g.gameId === game.gameId
               );
-              const diff = game.top_score - (opponent ? opponent.top_score : 0);
+              const diff = game.topScore - (opponent ? opponent.topScore : 0);
               return (
                 <div
-                  key={game.game_id}
+                  key={game.gameId}
                   className={`game-score ${diff >= 0 ? "winning" : "losing"}`}
                 >
                   <h3>{game.name}</h3>
-                  <p>Top: {game.top_score}</p>
+                  <p>Top: {game.topScore}</p>
                   <p>{diff >= 0 ? `+${diff}` : diff}</p>
                 </div>
               );

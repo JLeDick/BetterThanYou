@@ -20,39 +20,35 @@ const router = express.Router();
 router.post(
   "/",
   requireUser,
-  requireBody(["game_id", "score"]),
+  requireBody(["gameId", "score"]),
   async (req, res) => {
     const score = await submitScore({
-      user_id: req.user.id,
-      game_id: req.body.game_id,
+      userId: req.user.id,
+      gameId: req.body.gameId,
       score: req.body.score,
     });
     res.status(201).send(score);
   }
 );
 
-// For Leaderboard
-router.get("/game/:game_id", async (req, res) => {
-  const scores = await getMaxScoresByGame({ game_id: req.params.game_id });
+router.get("/game/:gameId", async (req, res) => {
+  const scores = await getMaxScoresByGame({ gameId: req.params.gameId });
   res.send(scores);
 });
 
-// All scores for a users stat page
-router.get("/user/:user_id", async (req, res) => {
-  const scores = await getScoresByUser({ user_id: req.params.user_id });
+router.get("/user/:userId", async (req, res) => {
+  const scores = await getScoresByUser({ userId: req.params.userId });
   res.send(scores);
 });
 
-// Users scores on a specific game
-router.get("/game/:game_id/user", requireUser, async (req, res) => {
+router.get("/game/:gameId/user", requireUser, async (req, res) => {
   const scores = await getScoresByGameAndUser({
-    user_id: req.user.id,
-    game_id: req.params.game_id,
+    userId: req.user.id,
+    gameId: req.params.gameId,
   });
   res.send(scores);
 });
 
-// Compare two users top scores across all games
 router.get("/compare/:username1/:username2", async (req, res) => {
   const user1 = await getUserByUsername({ username: req.params.username1 });
   const user2 = await getUserByUsername({ username: req.params.username2 });
@@ -61,19 +57,18 @@ router.get("/compare/:username1/:username2", async (req, res) => {
     return res.status(404).send("User not found");
   }
 
-  const user1Scores = await getAllTopScoresOfUser({ user_id: user1.id });
-  const user2Scores = await getAllTopScoresOfUser({ user_id: user2.id });
+  const user1Scores = await getAllTopScoresOfUser({ userId: user1.id });
+  const user2Scores = await getAllTopScoresOfUser({ userId: user2.id });
   res.send({ user1: user1Scores, user2: user2Scores });
 });
 
-// All stats for a user (daily, weekly, monthly, all-time)
-router.get("/stats/:user_id", async (req, res) => {
-  const user_id = req.params.user_id;
+router.get("/stats/:userId", async (req, res) => {
+  const userId = req.params.userId;
   const [allTime, daily, weekly, monthly] = await Promise.all([
-    getAllTopScoresOfUser({ user_id }),
-    getDailyTopScores({ user_id }),
-    getWeeklyTopScores({ user_id }),
-    getMonthlyTopScores({ user_id }),
+    getAllTopScoresOfUser({ userId }),
+    getDailyTopScores({ userId }),
+    getWeeklyTopScores({ userId }),
+    getMonthlyTopScores({ userId }),
   ]);
   res.send({ allTime, daily, weekly, monthly });
 });

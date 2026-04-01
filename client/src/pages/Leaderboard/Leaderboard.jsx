@@ -98,7 +98,7 @@ export default function Leaderboard() {
                 >
                   <td>{i + 1}</td>
                   <td>{entry.username}</td>
-                  <td>{Number(entry.top_score).toLocaleString()}</td>
+                  <td>{Number(entry.topScore).toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>

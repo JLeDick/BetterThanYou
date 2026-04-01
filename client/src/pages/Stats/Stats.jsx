@@ -58,9 +58,9 @@ function StatsSection({ title, scores }) {
       ) : (
         <div className="stats-games">
           {scores.map((s) => (
-              <div key={s.game_id} className="stats-game-card">
+              <div key={s.gameId} className="stats-game-card">
                 <p className="stats-game-name">{s.name}</p>
-                <p className="stats-game-score">{s.top_score}</p>
+                <p className="stats-game-score">{s.topScore}</p>
               </div>
             ))}
         </div>

@@ -35,7 +35,7 @@ router.post(
     const verificationToken = crypto.randomBytes(32).toString("hex");
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
     await setVerificationToken({
-      user_id: user.id,
+      userId: user.id,
       token: verificationToken,
       expires,
     });
@@ -78,14 +78,14 @@ router.get("/verify/:token", async (req, res) => {
 });
 
 router.post("/resend-verification", requireUser, async (req, res) => {
-  if (req.user.email_verified) {
+  if (req.user.emailVerified) {
     return res.status(400).send("Email already verified.");
   }
 
   const verificationToken = crypto.randomBytes(32).toString("hex");
   const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
   await setVerificationToken({
-    user_id: req.user.id,
+    userId: req.user.id,
     token: verificationToken,
     expires,
   });
@@ -114,7 +114,7 @@ router.post(
 
     const resetToken = crypto.randomBytes(32).toString("hex");
     const expires = new Date(Date.now() + 60 * 60 * 1000);
-    await setResetToken({ user_id: user.id, token: resetToken, expires });
+    await setResetToken({ userId: user.id, token: resetToken, expires });
 
     try {
       await sendPasswordResetEmail({ email: user.email, token: resetToken });
@@ -136,7 +136,7 @@ router.post(
     }
 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    await updatePassword({ user_id: user.id, password_hash: hashedPassword });
+    await updatePassword({ userId: user.id, passwordHash: hashedPassword });
 
     res.send("Password updated successfully.");
   }
@@ -145,13 +145,13 @@ router.post(
 router.post(
   "/change-password",
   requireUser,
-  requireBody(["current_password", "new_password"]),
+  requireBody(["currentPassword", "newPassword"]),
   async (req, res) => {
-    const { current_password, new_password } = req.body;
+    const { currentPassword, newPassword } = req.body;
     const { error } = await changePassword({
-      user_id: req.user.id,
-      current_password,
-      new_password,
+      userId: req.user.id,
+      currentPassword,
+      newPassword,
     });
     if (error) return res.status(400).send(error);
     res.send("Password changed successfully.");

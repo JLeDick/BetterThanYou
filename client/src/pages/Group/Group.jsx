@@ -71,7 +71,7 @@ export default function Group() {
               onClick={() => setSelectedId(g.id)}
             >
               <span className="group-name">{g.name}</span>
-              <span className="group-code">Code: {g.invite_code}</span>
+              <span className="group-code">Code: {g.inviteCode}</span>
             </div>
           ))}
         </div>
@@ -127,7 +127,7 @@ function CreateGroupForm({ token, onCreated }) {
       {state.error && <p role="alert">{state.error}</p>}
       {state.created && (
         <p className="invite-result">
-          Invite code: <strong>{state.created.invite_code}</strong>
+          Invite code: <strong>{state.created.inviteCode}</strong>
         </p>
       )}
     </div>
@@ -137,7 +137,7 @@ function CreateGroupForm({ token, onCreated }) {
 function JoinGroupForm({ token, onJoined }) {
   const [state, submitAction, isPending] = useActionState(
     async (_prev, formData) => {
-      const invite_code = formData.get("invite_code");
+      const inviteCode = formData.get("inviteCode");
       try {
         const res = await fetch(`${HOST}api/groups/join`, {
           method: "POST",
@@ -145,7 +145,7 @@ function JoinGroupForm({ token, onJoined }) {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ invite_code }),
+          body: JSON.stringify({ inviteCode }),
         });
         if (!res.ok) throw new Error(await res.text());
         onJoined();
@@ -163,7 +163,7 @@ function JoinGroupForm({ token, onJoined }) {
       <form action={submitAction}>
         <label>
           Invite Code
-          <input type="text" name="invite_code" required />
+          <input type="text" name="inviteCode" required />
         </label>
         <button disabled={isPending}>
           {isPending ? "Joining..." : "Join"}
@@ -181,12 +181,12 @@ function GroupDetail({ data, onLeave, currentUser }) {
   // Organize leaderboard by game
   const games = {};
   for (const row of leaderboard) {
-    if (!games[row.game_id]) {
-      games[row.game_id] = { name: row.game_name, scores: [] };
+    if (!games[row.gameId]) {
+      games[row.gameId] = { name: row.gameName, scores: [] };
     }
-    games[row.game_id].scores.push({
+    games[row.gameId].scores.push({
       username: row.username,
-      top_score: row.top_score,
+      topScore: row.topScore,
     });
   }
 
@@ -194,7 +194,7 @@ function GroupDetail({ data, onLeave, currentUser }) {
     <div className="group-detail">
       <div className="group-detail-header">
         <h2>{group.name}</h2>
-        <p className="group-code">Invite code: {group.invite_code}</p>
+        <p className="group-code">Invite code: {group.inviteCode}</p>
         <button className="leave-btn" onClick={() => onLeave(group.id)}>
           Leave Group
         </button>
@@ -230,7 +230,7 @@ function GroupDetail({ data, onLeave, currentUser }) {
                     >
                       <span className="rank">{i + 1}</span>
                       <span className="username">{s.username}</span>
-                      <span className="score">{s.top_score}</span>
+                      <span className="score">{s.topScore}</span>
                     </div>
                   ))}
                 </div>

@@ -46,7 +46,7 @@ export async function getUserById({ id }) {
   const {
     rows: [user],
   } = await db.query(
-    `SELECT id, username, email, email_verified FROM users WHERE id = $1`,
+    `SELECT id, username, email, email_verified AS "emailVerified" FROM users WHERE id = $1`,
     [id]
   );
   return user;
@@ -59,12 +59,12 @@ export async function getUserByEmail({ email }) {
   return user;
 }
 
-export async function setVerificationToken({ user_id, token, expires }) {
+export async function setVerificationToken({ userId, token, expires }) {
   await db.query(
     `UPDATE users
      SET verification_token = $1, verification_token_expires = $2
      WHERE id = $3`,
-    [token, expires, user_id]
+    [token, expires, userId]
   );
 }
 
@@ -82,12 +82,12 @@ export async function verifyUserEmail({ token }) {
   return user;
 }
 
-export async function setResetToken({ user_id, token, expires }) {
+export async function setResetToken({ userId, token, expires }) {
   await db.query(
     `UPDATE users
      SET reset_token = $1, reset_token_expires = $2
      WHERE id = $3`,
-    [token, expires, user_id]
+    [token, expires, userId]
   );
 }
 
@@ -103,25 +103,25 @@ export async function getUserByResetToken({ token }) {
   return user;
 }
 
-export async function changePassword({ user_id, current_password, new_password }) {
+export async function changePassword({ userId, currentPassword, newPassword }) {
   const {
     rows: [user],
-  } = await db.query(`SELECT password_hash FROM users WHERE id = $1`, [user_id]);
+  } = await db.query(`SELECT password_hash FROM users WHERE id = $1`, [userId]);
   if (!user) return { error: "User not found." };
 
-  const isValid = await bcrypt.compare(current_password, user.password_hash);
+  const isValid = await bcrypt.compare(currentPassword, user.password_hash);
   if (!isValid) return { error: "Current password is incorrect." };
 
-  const hashed = await bcrypt.hash(new_password, 10);
-  await db.query(`UPDATE users SET password_hash = $1 WHERE id = $2`, [hashed, user_id]);
+  const hashed = await bcrypt.hash(newPassword, 10);
+  await db.query(`UPDATE users SET password_hash = $1 WHERE id = $2`, [hashed, userId]);
   return { error: null };
 }
 
-export async function updatePassword({ user_id, password_hash }) {
+export async function updatePassword({ userId, passwordHash }) {
   await db.query(
     `UPDATE users
      SET password_hash = $1, reset_token = NULL, reset_token_expires = NULL
      WHERE id = $2`,
-    [password_hash, user_id]
+    [passwordHash, userId]
   );
 }
