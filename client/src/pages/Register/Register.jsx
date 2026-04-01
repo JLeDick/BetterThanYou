@@ -1,35 +1,34 @@
-import { useState, useContext } from "react";
+import { useActionState, use } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { AuthContext } from "../../context/AuthContext.js";
 
 export default function Register() {
-  const { register } = useContext(AuthContext);
+  const { register } = use(AuthContext);
   const navigate = useNavigate();
 
-  const [error, setError] = useState(null);
-
-  const tryRegister = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-
-    const username = formData.get("username");
-    const email = formData.get("email");
-    const password = formData.get("password");
-    try {
-      await register({ username, email, password });
-      navigate("/");
-    } catch (e) {
-      setError(e.message);
-    }
-  };
+  const [error, submitAction, isPending] = useActionState(
+    async (_prevState, formData) => {
+      const username = formData.get("username");
+      const email = formData.get("email");
+      const password = formData.get("password");
+      try {
+        await register({ username, email, password });
+        navigate("/");
+        return null;
+      } catch (e) {
+        return e.message;
+      }
+    },
+    null
+  );
 
   return (
     <div className="Register-Page">
       <div className="Register-Box">
         <h1>Register</h1>
 
-        <form onSubmit={tryRegister}>
+        <form action={submitAction}>
           <label>
             Username
             <input type="text" name="username" required />
@@ -42,7 +41,9 @@ export default function Register() {
             Password
             <input type="password" name="password" required />
           </label>
-          <button>Register</button>
+          <button disabled={isPending}>
+            {isPending ? "Registering..." : "Register"}
+          </button>
           {error && <p role="alert">{error}</p>}
         </form>
 

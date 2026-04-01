@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, use, useRef } from "react";
 import { AuthContext, HOST } from "../../../../context/AuthContext";
 import calcWPM from "../Logic/wordsPerMinute";
 import accuracyCalc from "../Logic/accuracyCalc";
@@ -6,7 +6,7 @@ import getRandomWords from "../Logic/wordSelection";
 import calcScore from "../Logic/calcScore";
 
 export default function TypingSpeed() {
-  const { token } = useContext(AuthContext);
+  const { token } = use(AuthContext);
   const [error, setError] = useState(null);
   const inputRef = useRef(null);
   const wordsRef = useRef(null);

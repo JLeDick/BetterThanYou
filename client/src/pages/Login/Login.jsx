@@ -1,34 +1,33 @@
-import { useState, useContext } from "react";
+import { useActionState, use } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { AuthContext } from "../../context/AuthContext.js";
 
 export default function Login() {
-  const { login } = useContext(AuthContext);
+  const { login } = use(AuthContext);
   const navigate = useNavigate();
 
-  const [error, setError] = useState(null);
-
-  const tryLogin = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-
-    const username = formData.get("username");
-    const password = formData.get("password");
-    try {
-      await login({ username, password });
-      navigate("/");
-    } catch (e) {
-      setError(e.message);
-    }
-  };
+  const [error, submitAction, isPending] = useActionState(
+    async (_prevState, formData) => {
+      const username = formData.get("username");
+      const password = formData.get("password");
+      try {
+        await login({ username, password });
+        navigate("/");
+        return null;
+      } catch (e) {
+        return e.message;
+      }
+    },
+    null
+  );
 
   return (
     <div className="Login-Page">
       <div className="Login-Box">
         <h1>Login</h1>
 
-        <form onSubmit={tryLogin}>
+        <form action={submitAction}>
           <label>
             Username
             <input type="text" name="username" required />
@@ -37,7 +36,9 @@ export default function Login() {
             Password
             <input type="password" name="password" required />
           </label>
-          <button>Login</button>
+          <button disabled={isPending}>
+            {isPending ? "Logging in..." : "Login"}
+          </button>
           {error && <p role="alert">{error}</p>}
         </form>
 

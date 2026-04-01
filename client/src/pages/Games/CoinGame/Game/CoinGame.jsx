@@ -140,9 +140,33 @@ export default function CoinGame() {
       }
 
       // NOT ENOUGH COINS TO CONTINUE
-      if (remaining.length < 2) {
-        setFinalScore({ score: g.score, round: g.round });
-        setGamePhase("gameOver");
+      if (remaining.length < 2 && livesLost < 2) {
+        g.round += 1;
+        g.notification = {
+          text: `Round Clear! Failed Last Turn, No Bonus: ${g.score}`,
+          color: "#c9a74c",
+          time: Date.now(),
+        };
+        const { coins, cups } = spawnCoinsAndCups(8, g.round);
+        g.coins = coins;
+        g.cups = cups;
+        g.roundScore = 0;
+        g.shooterId = null;
+        setGamePhase("picking");
+        return;
+      } else if (remaining.length === 0 && livesLost > 0) {
+        g.round += 1;
+        g.notification = {
+          text: `Round Clear! Failed Last Turn, No Bonus: ${g.score}`,
+          color: "#c9a74c",
+          time: Date.now(),
+        };
+        const { coins, cups } = spawnCoinsAndCups(8, g.round);
+        g.coins = coins;
+        g.cups = cups;
+        g.roundScore = 0;
+        g.shooterId = null;
+        setGamePhase("picking");
         return;
       }
 
@@ -287,7 +311,7 @@ export default function CoinGame() {
       const dragDist = Math.sqrt(dx * dx + dy * dy);
       const power = Math.min(dragDist / MAX_DRAG, 1);
       const angle = Math.atan2(dy, dx);
-      const arrowLen = power * 160;
+      const arrowLen = power * 320;
 
       g.arrow = {
         startX: shooter.x,

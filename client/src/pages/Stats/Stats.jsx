@@ -1,8 +1,8 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, use } from "react";
 import { AuthContext, HOST } from "../../context/AuthContext";
 
 export default function Stats() {
-  const { user } = useContext(AuthContext);
+  const { user } = use(AuthContext);
   const [error, setError] = useState(null);
   const [stats, setStats] = useState(null);
 

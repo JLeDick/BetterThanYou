@@ -1,37 +1,31 @@
-import { useState } from "react";
+import { useActionState } from "react";
 import { HOST } from "../../context/AuthContext.js";
 
 export default function Compare() {
-  const [error, setError] = useState(null);
-  const [results, setResults] = useState(null);
-  const [usernames, setUsernames] = useState({ user1: "", user2: "" });
+  const [state, submitAction, isPending] = useActionState(
+    async (_prevState, formData) => {
+      const user1 = formData.get("username1");
+      const user2 = formData.get("username2");
+      try {
+        const response = await fetch(
+          `${HOST}api/scores/compare/${user1}/${user2}`
+        );
 
-  const tryCompare = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData(e.target);
-
-    const user1 = formData.get("username1");
-    const user2 = formData.get("username2");
-    setUsernames({ user1, user2 });
-    try {
-      const response = await fetch(
-        `${HOST}api/scores/compare/${user1}/${user2}`,
-        {
-          method: "GET",
+        if (!response.ok) {
+          const message = await response.text();
+          throw new Error(message);
         }
-      );
 
-      if (!response.ok) {
-        const message = await response.text();
-        throw new Error(message);
+        const results = await response.json();
+        return { results, usernames: { user1, user2 }, error: null };
+      } catch (e) {
+        return { results: null, usernames: null, error: e.message };
       }
+    },
+    { results: null, usernames: null, error: null }
+  );
 
-      setResults(await response.json());
-    } catch (e) {
-      setError(e.message);
-    }
-  };
+  const { results, usernames, error } = state;
 
   return (
     <>
@@ -40,7 +34,7 @@ export default function Compare() {
       </header>
 
       <div className="user-compare-block">
-        <form onSubmit={tryCompare}>
+        <form action={submitAction}>
           <label>
             User 1
             <input type="text" name="username1" required />
@@ -49,7 +43,9 @@ export default function Compare() {
             User 2
             <input type="text" name="username2" required />
           </label>
-          <button>Compare</button>
+          <button disabled={isPending}>
+            {isPending ? "Comparing..." : "Compare"}
+          </button>
           {error && <p role="alert">{error}</p>}
         </form>
       </div>

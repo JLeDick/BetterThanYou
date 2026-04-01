@@ -1,9 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext.js";
-import { useContext, useState, useEffect } from "react";
+import { use, useState, useEffect } from "react";
 
 export default function Navbar() {
-  const { token, logout } = useContext(AuthContext);
+  const { token, logout } = use(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   // useLocation => URL new object => set to location =>

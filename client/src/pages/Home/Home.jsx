@@ -21,7 +21,7 @@ export default function Home() {
 
         <Link to="/games/coin-game" className="game-tile">
           <h2>Coin Game</h2>
-          <p>Flick coins off the table</p>
+          <p>Precision shots on the tabletop</p>
         </Link>
       </div>
     </>

@@ -35,8 +35,8 @@ export default function AuthProvider({ children }) {
     localStorage.setItem("token", newToken);
     setToken(newToken);
 
-    // gets username for stats => const { user } = useContext(AuthContext)
-    // use user.id and user.username
+    // Fetch user data so components can access user.id and user.username
+    // via const { user } = use(AuthContext)
     const meResponse = await fetch(`${HOST}api/users/me`, {
       headers: { Authorization: `Bearer ${newToken}` },
     });
@@ -75,7 +75,7 @@ export default function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider
+    <AuthContext
       value={{
         token,
         setToken,
@@ -87,6 +87,6 @@ export default function AuthProvider({ children }) {
       }}
     >
       {children}
-    </AuthContext.Provider>
+    </AuthContext>
   );
 }

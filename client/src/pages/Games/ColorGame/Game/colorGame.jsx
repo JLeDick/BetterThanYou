@@ -1,10 +1,10 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, use } from "react";
 import { AuthContext, HOST } from "../../../../context/AuthContext.js";
 
 import { generateColors } from "../Logic/colors.js";
 
 export default function ColorGame() {
-  const { token } = useContext(AuthContext);
+  const { token } = use(AuthContext);
   const [error, setError] = useState(null);
 
   const [game, setGame] = useState({
