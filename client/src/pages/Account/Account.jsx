@@ -1,5 +1,6 @@
 import { useActionState, use } from "react";
-import { AuthContext, HOST } from "../../context/AuthContext.js";
+import { AuthContext } from "../../context/AuthContext.js";
+import { changePassword } from "../../api/queries.js";
 
 export default function Account() {
   const { token, user } = use(AuthContext);
@@ -15,16 +16,11 @@ export default function Account() {
       }
 
       try {
-        const res = await fetch(`${HOST}api/users/change-password`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ currentPassword: current, newPassword: password }),
+        await changePassword({
+          token,
+          currentPassword: current,
+          newPassword: password,
         });
-        const message = await res.text();
-        if (!res.ok) return { success: false, error: message };
         return { success: true, error: null };
       } catch (e) {
         return { success: false, error: e.message };

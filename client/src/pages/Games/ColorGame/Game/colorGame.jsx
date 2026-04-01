@@ -1,6 +1,6 @@
 import { useState, useEffect, use } from "react";
-import { AuthContext, HOST } from "../../../../context/AuthContext.js";
-
+import { AuthContext } from "../../../../context/AuthContext.js";
+import { createScore } from "../../../../api/queries.js";
 import { generateColors } from "../Logic/colors.js";
 
 export default function ColorGame() {
@@ -46,14 +46,7 @@ export default function ColorGame() {
     const score = game.round - 1;
     if (score <= 0) return;
 
-    fetch(`${HOST}api/scores`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ gameId: 1, score }),
-    }).catch((e) => setError(e.message));
+    createScore({ token, gameId: 1, score }).catch((e) => setError(e.message));
   }, [game.over, game.round, token]);
 
   return (

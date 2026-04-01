@@ -1,5 +1,12 @@
 import { useState, useEffect, useActionState, use } from "react";
-import { AuthContext, HOST } from "../../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
+import {
+  getMyGroups,
+  getGroupDetails,
+  createGroup,
+  joinGroup,
+  leaveGroup,
+} from "../../api/queries.js";
 
 export default function Group() {
   const { token, user } = use(AuthContext);
@@ -7,22 +14,17 @@ export default function Group() {
   const [selectedId, setSelectedId] = useState(null);
   const [groupDetail, setGroupDetail] = useState(null);
 
-  // Fetch user's groups on mount
   useEffect(() => {
     if (!token) return;
-    fetchGroups();
+    refreshGroups();
   }, [token]);
 
-  // Fetch group details when one is selected
   useEffect(() => {
     if (!selectedId) {
       setGroupDetail(null);
       return;
     }
-    fetch(`${HOST}api/groups/${selectedId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => (res.ok ? res.json() : Promise.reject()))
+    getGroupDetails({ token, groupId: selectedId })
       .then((data) => setGroupDetail(data))
       .catch(() => {
         setSelectedId(null);
@@ -30,22 +32,16 @@ export default function Group() {
       });
   }, [selectedId]);
 
-  const fetchGroups = () => {
-    fetch(`${HOST}api/groups/mine`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => (res.ok ? res.json() : Promise.reject()))
+  const refreshGroups = () => {
+    getMyGroups(token)
       .then((data) => setGroups(data))
       .catch(() => {});
   };
 
   const handleLeave = async (groupId) => {
-    await fetch(`${HOST}api/groups/${groupId}/leave`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    await leaveGroup({ token, groupId });
     setSelectedId(null);
-    fetchGroups();
+    refreshGroups();
   };
 
   if (!token) return <p>Log in to see your groups.</p>;
@@ -57,8 +53,8 @@ export default function Group() {
       </header>
 
       <div className="groups-forms">
-        <CreateGroupForm token={token} onCreated={fetchGroups} />
-        <JoinGroupForm token={token} onJoined={fetchGroups} />
+        <CreateGroupForm token={token} onCreated={refreshGroups} />
+        <JoinGroupForm token={token} onJoined={refreshGroups} />
       </div>
 
       {groups.length > 0 && (
@@ -93,16 +89,7 @@ function CreateGroupForm({ token, onCreated }) {
     async (_prev, formData) => {
       const name = formData.get("name");
       try {
-        const res = await fetch(`${HOST}api/groups`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ name }),
-        });
-        if (!res.ok) throw new Error(await res.text());
-        const group = await res.json();
+        const group = await createGroup({ token, name });
         onCreated();
         return { error: null, created: group };
       } catch (e) {
@@ -139,15 +126,7 @@ function JoinGroupForm({ token, onJoined }) {
     async (_prev, formData) => {
       const inviteCode = formData.get("inviteCode");
       try {
-        const res = await fetch(`${HOST}api/groups/join`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ inviteCode }),
-        });
-        if (!res.ok) throw new Error(await res.text());
+        await joinGroup({ token, inviteCode });
         onJoined();
         return { error: null, success: true };
       } catch (e) {

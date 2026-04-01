@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router";
-import { AuthContext, HOST } from "../../context/AuthContext.js";
+import { AuthContext } from "../../context/AuthContext.js";
+import { resendVerification } from "../../api/queries.js";
 import { use, useState, useEffect } from "react";
 
 export default function Navbar() {
@@ -14,10 +15,7 @@ export default function Navbar() {
 
   const handleResendVerification = async () => {
     try {
-      await fetch(`${HOST}api/users/resend-verification`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await resendVerification(token);
       alert("Verification email sent! Check your inbox.");
     } catch {
       alert("Failed to send email. Try again later.");

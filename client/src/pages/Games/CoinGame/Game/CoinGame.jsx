@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useContext, useCallback } from "react";
-import { AuthContext, HOST } from "../../../../context/AuthContext";
+import { AuthContext } from "../../../../context/AuthContext";
+import { createScore } from "../../../../api/queries.js";
 import {
   COIN_RADIUS,
   TABLE_CENTER,
@@ -373,14 +374,7 @@ export default function CoinGame() {
     const score = gameRef.current.score;
     if (score <= 0) return;
 
-    fetch(`${HOST}api/scores`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ gameId: 3, score }),
-    }).catch((e) => setError(e.message));
+    createScore({ token, gameId: 3, score }).catch((e) => setError(e.message));
   }, [phase, token]);
 
   // GAME RENDER

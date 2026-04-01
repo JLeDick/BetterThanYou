@@ -1,18 +1,13 @@
 import { useActionState } from "react";
 import { Link } from "react-router";
-import { HOST } from "../../context/AuthContext.js";
+import { forgotPassword } from "../../api/queries.js";
 
 export default function ForgotPassword() {
   const [state, submitAction, isPending] = useActionState(
     async (_prev, formData) => {
       const email = formData.get("email");
       try {
-        const res = await fetch(`${HOST}api/users/forgot-password`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-        });
-        const message = await res.text();
+        const message = await forgotPassword(email);
         return { sent: true, message, error: null };
       } catch (e) {
         return { sent: false, message: null, error: e.message };

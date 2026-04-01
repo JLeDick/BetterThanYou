@@ -1,5 +1,6 @@
 import { useEffect, useState, use } from "react";
-import { AuthContext, HOST } from "../../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
+import { getUserStats } from "../../api/queries.js";
 
 export default function Stats() {
   const { user } = use(AuthContext);
@@ -9,23 +10,9 @@ export default function Stats() {
   useEffect(() => {
     if (!user) return;
 
-    const fetchStats = async () => {
-      try {
-        const response = await fetch(`${HOST}api/scores/stats/${user.id}`);
-
-        if (!response.ok) {
-          const message = await response.text();
-          throw new Error(message);
-        }
-
-        const data = await response.json();
-        setStats(data);
-      } catch (e) {
-        setError(e.message);
-      }
-    };
-
-    fetchStats();
+    getUserStats(user.id)
+      .then((data) => setStats(data))
+      .catch((e) => setError(e.message));
   }, [user]);
 
   if (!user) return <p>Log in to see your stats.</p>;

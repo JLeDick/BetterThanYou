@@ -1,6 +1,6 @@
 import { useActionState } from "react";
 import { useSearchParams, Link } from "react-router";
-import { HOST } from "../../context/AuthContext.js";
+import { resetPassword } from "../../api/queries.js";
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -16,13 +16,7 @@ export default function ResetPassword() {
       }
 
       try {
-        const res = await fetch(`${HOST}api/users/reset-password`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token, password }),
-        });
-        const message = await res.text();
-        if (!res.ok) return { success: false, error: message };
+        await resetPassword({ token, password });
         return { success: true, error: null };
       } catch (e) {
         return { success: false, error: e.message };

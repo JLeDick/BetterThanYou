@@ -1,5 +1,6 @@
 import { useState, useEffect, use, useRef } from "react";
-import { AuthContext, HOST } from "../../../../context/AuthContext";
+import { AuthContext } from "../../../../context/AuthContext";
+import { createScore } from "../../../../api/queries.js";
 import calcWPM from "../Logic/wordsPerMinute";
 import accuracyCalc from "../Logic/accuracyCalc";
 import getRandomWords from "../Logic/wordSelection";
@@ -57,14 +58,7 @@ export default function TypingSpeed() {
     const score = calcScore(game.results);
     if (score <= 0) return;
 
-    fetch(`${HOST}api/scores`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ gameId: 2, score: score }),
-    }).catch((e) => setError(e.message));
+    createScore({ token, gameId: 2, score }).catch((e) => setError(e.message));
   }, [game.over]);
 
   // Auto-scroll to keep current word visible

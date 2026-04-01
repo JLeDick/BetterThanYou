@@ -1,5 +1,5 @@
 import { useActionState } from "react";
-import { HOST } from "../../context/AuthContext.js";
+import { compareUsers } from "../../api/queries.js";
 
 export default function Compare() {
   const [state, submitAction, isPending] = useActionState(
@@ -7,16 +7,7 @@ export default function Compare() {
       const user1 = formData.get("username1");
       const user2 = formData.get("username2");
       try {
-        const response = await fetch(
-          `${HOST}api/scores/compare/${user1}/${user2}`
-        );
-
-        if (!response.ok) {
-          const message = await response.text();
-          throw new Error(message);
-        }
-
-        const results = await response.json();
+        const results = await compareUsers(user1, user2);
         return { results, usernames: { user1, user2 }, error: null };
       } catch (e) {
         return { results: null, usernames: null, error: e.message };

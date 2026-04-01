@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router";
-import { HOST } from "../../context/AuthContext.js";
+import { verifyEmail } from "../../api/queries.js";
 
 export default function VerifyEmail() {
   const [searchParams] = useSearchParams();
@@ -15,16 +15,10 @@ export default function VerifyEmail() {
       return;
     }
 
-    fetch(`${HOST}api/users/verify/${token}`)
-      .then(async (res) => {
-        const text = await res.text();
-        if (res.ok) {
-          setStatus("success");
-          setMessage(text);
-        } else {
-          setStatus("error");
-          setMessage(text);
-        }
+    verifyEmail(token)
+      .then(({ ok, message }) => {
+        setStatus(ok ? "success" : "error");
+        setMessage(message);
       })
       .catch(() => {
         setStatus("error");
