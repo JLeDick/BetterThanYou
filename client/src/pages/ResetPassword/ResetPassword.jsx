@@ -1,5 +1,5 @@
 import { useActionState } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link } from "react-router";
 import { HOST } from "../../context/AuthContext.js";
 
 export default function ResetPassword() {

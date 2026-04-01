@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router";
 
 import Layout from "./components/Layout/Layout";
 import Login from "./pages/Login/Login";
@@ -24,7 +24,7 @@ function App() {
       <Route element={<Layout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/" element={<Home />} />
+        <Route index element={<Home />} />
         <Route path="/games/color-game" element={<ColorGame />} />
         <Route path="/games/typing-speed" element={<TypingSpeed />} />
         <Route path="/games/coin-game" element={<CoinGame />} />
@@ -36,6 +36,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/account" element={<Account />} />
+        <Route path="*" element={<h1>404 - Page Not Found</h1>} />
       </Route>
     </Routes>
   );

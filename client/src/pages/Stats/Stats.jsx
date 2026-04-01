@@ -57,12 +57,7 @@ function StatsSection({ title, scores }) {
         <p>No scores yet.</p>
       ) : (
         <div className="stats-games">
-          {/* Had to change `scores.map((s) =>` to
-          `[]...scores].sort((a, b) => a.game_id - b.game_id).map to get
-          the games to appear in the correct order */}
-          {[...scores]
-            .sort((a, b) => a.game_id - b.game_id)
-            .map((s) => (
+          {scores.map((s) => (
               <div key={s.game_id} className="stats-game-card">
                 <p className="stats-game-name">{s.name}</p>
                 <p className="stats-game-score">{s.top_score}</p>

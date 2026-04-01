@@ -86,6 +86,7 @@ export async function getAllTopScoresOfUser({ user_id }) {
     JOIN games ON scores.game_id = games.id
     WHERE scores.user_id = $1
     GROUP BY games.id, games.name
+    ORDER BY games.id
     `,
     [user_id]
   );
@@ -101,6 +102,7 @@ export async function getDailyTopScores({ user_id }) {
     WHERE scores.user_id = $1
     AND scores.created_at > NOW() - INTERVAL '1 day'
     GROUP BY games.id, games.name
+    ORDER BY games.id
     `,
     [user_id]
   );
@@ -116,6 +118,7 @@ export async function getWeeklyTopScores({ user_id }) {
     WHERE scores.user_id = $1
     AND scores.created_at > NOW() - INTERVAL '7 days'
     GROUP BY games.id, games.name
+    ORDER BY games.id
     `,
     [user_id]
   );
@@ -131,6 +134,7 @@ export async function getMonthlyTopScores({ user_id }) {
     WHERE scores.user_id = $1
     AND scores.created_at > NOW() - INTERVAL '30 days'
     GROUP BY games.id, games.name
+    ORDER BY games.id
     `,
     [user_id]
   );
