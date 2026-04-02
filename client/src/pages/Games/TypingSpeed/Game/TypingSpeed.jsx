@@ -73,7 +73,9 @@ export default function TypingSpeed() {
     const score = calcScore(game.results);
     if (score <= 0) return;
 
-    createScore({ token, gameId: 2, score }).catch((e) => setError(e.message));
+    createScore({ token, gameId: mode === "mobile" ? 4 : 2, score }).catch(
+      (e) => setError(e.message)
+    );
   }, [game.over]);
 
   // Auto-scroll to keep current word visible
