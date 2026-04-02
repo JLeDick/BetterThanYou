@@ -545,13 +545,18 @@ p[role="alert"] {
   flex-wrap: wrap;
   gap: 0.5rem;
   max-height: 150px;
-  overflow: hidden;
+  overflow-y: auto;
+  scrollbar-width: none; /* hide scrollbar - current word auto-centers via JS */
   padding: 1rem;
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   margin-bottom: 1.25rem;
   line-height: 2;
+}
+
+.typing-words::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
 .typing-word {

@@ -81,7 +81,7 @@ export default function TypingSpeed() {
     if (!game.started || game.over) return;
     const currentEl = wordsRef.current?.querySelector(".typing-word.current");
     if (currentEl) {
-      currentEl.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      currentEl.scrollIntoView({ block: "center", behavior: "smooth" });
     }
   }, [game.currentIndex]);
 
