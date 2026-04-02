@@ -528,6 +528,14 @@ p[role="alert"] {
   border-color: rgba(255, 255, 255, 0.1);
 }
 
+.color-canvas {
+  display: block;
+  margin: 0 auto;
+  max-width: 360px;
+  width: 100%;
+  cursor: pointer;
+}
+
 /* === TYPING TEST === */
 .typing-game {
   text-align: center;
