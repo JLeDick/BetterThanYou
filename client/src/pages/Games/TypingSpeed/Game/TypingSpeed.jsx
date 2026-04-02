@@ -15,10 +15,12 @@ export default function TypingSpeed() {
   const [error, setError] = useState(null);
   const inputRef = useRef(null);
   const wordsRef = useRef(null);
+  const [mode, setMode] = useState(null);
 
   const [game, setGame] = useState({
     started: false,
     over: false,
+    timerStarted: false,
     words: [],
     currentIndex: 0,
     results: [],
@@ -30,10 +32,19 @@ export default function TypingSpeed() {
   const startGame = () => {
     setError(null);
     setInput("");
+
+    // Capitalize words for mobile users
+    const words = getRandomWords();
+    const displayWords =
+      mode === "mobile"
+        ? words.map((w) => w[0].toUpperCase() + w.slice(1))
+        : words;
+
     setGame({
       started: true,
       over: false,
-      words: getRandomWords(),
+      timerStarted: false,
+      words: displayWords,
       currentIndex: 0,
       results: [],
       timeLeft: 30,
@@ -42,7 +53,7 @@ export default function TypingSpeed() {
 
   // Countdown timer - ends the game when it hits 0
   useEffect(() => {
-    if (!game.started || game.over) return;
+    if (!game.timerStarted || game.over) return;
 
     const interval = setInterval(() => {
       setGame((prev) => {
@@ -54,7 +65,7 @@ export default function TypingSpeed() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [game.started, game.over]);
+  }, [game.timerStarted, game.over]);
 
   // Submit score when game ends
   useEffect(() => {
@@ -75,6 +86,11 @@ export default function TypingSpeed() {
   }, [game.currentIndex]);
 
   const handleInput = (e) => {
+    // Start timer only after first input
+    if (!game.timerStarted) {
+      setGame((prev) => ({ ...prev, timerStarted: true }));
+    }
+
     const value = e.target.value;
 
     // space pressed - submit current word
@@ -102,7 +118,17 @@ export default function TypingSpeed() {
         <h1>Typing Speed</h1>
       </header>
 
-      {!game.started && !game.over && (
+      {/* Mode Selection - shows when mode isn't yet picked */}
+      {!mode && (
+        <div className="game-start">
+          <p>Choose your input method:</p>
+          <button onClick={() => setMode("keyboard")}>Keyboard</button>
+          <button onClick={() => setMode("mobile")}>Mobile</button>
+        </div>
+      )}
+
+      {/* Start screen - shows after mode picked, before game start */}
+      {mode && !game.started && !game.over && (
         <div className="game-start">
           <p>30 seconds. Words enter after space.</p>
           <button onClick={startGame}>Start</button>
