@@ -120,10 +120,15 @@ export default function TypingSpeed() {
 
       {/* Mode Selection - shows when mode isn't yet picked */}
       {!mode && (
-        <div className="game-start">
-          <p>Choose your input method:</p>
-          <button onClick={() => setMode("keyboard")}>Keyboard</button>
-          <button onClick={() => setMode("mobile")}>Mobile</button>
+        <div className="game-selection-block">
+          <button className="game-tile" onClick={() => setMode("keyboard")}>
+            <h2>Keyboard</h2>
+            <p>Standard desktop typing</p>
+          </button>
+          <button className="game-tile" onClick={() => setMode("mobile")}>
+            <h2>Mobile</h2>
+            <p>Capitalized words for phone keyboards</p>
+          </button>
         </div>
       )}
 
